@@ -1,19 +1,41 @@
-# Python
-venv/
+# Python / caches
+.venv/
+**/venv/
 __pycache__/
 *.pyc
+*.pyo
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.cache/
 
-# IDE configs
-.vscode/
-
-# Large / generated / temp files
-videos/
-*.mp4
-*.avi
-*.mkv
+# Logs
+logs/
+backend/ai/logs/
 *.log
 
-# OS / misc
-.DS_Store
-Thumbs.db
-backend/ai/models/*x.pt
+# Uploads / generated media
+backend/ai/uploads/
+
+# Local DBs + encryption keys
+backend/database/sqlite/*.db
+backend/database/sqlite/*.db-*
+backend/database/sqlite/.master_key
+*.sqlite
+*.sqlite3
+
+# ML model weights / artifacts
+backend/ai/models/
+*.pt
+*.pth
+*.onnx
+*.engine
+
+# Node dependencies
+**/node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Fabric samples (see note below)
+fabric-samples.broken/

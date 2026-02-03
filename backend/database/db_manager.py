@@ -16,7 +16,12 @@ import json
 class DatabaseManager:
     """Manages SQLite and MongoDB connections"""
     
-    def __init__(self, sqlite_path='backend/database/sqlite/tourist.db'):
+    def __init__(self, sqlite_path=None):
+        if sqlite_path is None:
+            sqlite_path = os.getenv("SQLITE_PATH")
+        if not sqlite_path:
+            sqlite_path = str((Path(__file__).resolve().parent / 'sqlite' / 'tourist.db'))
+
         self.sqlite_path = sqlite_path
         self.conn = None
         self.master_key = None
@@ -103,10 +108,12 @@ class DatabaseManager:
         """
         import hashlib
         
-        # Generate ID hash
-        id_hash = hashlib.sha256(
-            f"{tourist_data['id_number']}{datetime.now().isoformat()}{secrets.token_hex(16)}".encode()
-        ).hexdigest()
+        # Generate ID hash (use precomputed if provided)
+        id_hash = tourist_data.get("id_hash")
+        if not id_hash:
+            id_hash = hashlib.sha256(
+                f"{tourist_data['id_number']}{datetime.now().isoformat()}{secrets.token_hex(16)}".encode()
+            ).hexdigest()
         
         # Encrypt sensitive data
         name_encrypted = self.encrypt_data(tourist_data['name'])
@@ -122,9 +129,10 @@ class DatabaseManager:
         cursor.execute('''
             INSERT INTO tourists (
                 did, id_hash, name_encrypted, id_type, id_number_encrypted,
-                phone_encrypted, email_encrypted, entry_point, itinerary_encrypted,
+                phone_encrypted, email_encrypted, nationality, entry_point,
+                expected_exit_timestamp, itinerary_encrypted,
                 encryption_key_id
-            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
         ''', (
             tourist_data['did'],
             id_hash,
@@ -133,7 +141,9 @@ class DatabaseManager:
             id_number_encrypted,
             phone_encrypted,
             email_encrypted,
+            tourist_data.get('nationality'),
             tourist_data['entry_point'],
+            tourist_data.get('expected_exit_timestamp'),
             itinerary_encrypted,
             'master_key_v1'
         ))
@@ -162,6 +172,19 @@ class DatabaseManager:
         tourist['email'] = self.decrypt_data(row['email_encrypted'])
         
         return tourist
+
+    def update_last_seen(self, did, camera_id):
+        """Update last seen camera + timestamp for a tourist."""
+        cursor = self.conn.cursor()
+        cursor.execute(
+            '''
+            UPDATE tourists
+            SET last_seen_camera = ?, last_seen_timestamp = ?
+            WHERE did = ?
+            ''',
+            (camera_id, datetime.now(), did)
+        )
+        self.conn.commit()
     
     def close(self):
         """Close database connection"""

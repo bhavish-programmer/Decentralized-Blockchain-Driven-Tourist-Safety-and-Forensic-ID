@@ -139,13 +139,19 @@ class PersonDetector:
             x1, y1, x2, y2 = obj['bbox']
             tracking_id = obj['tracking_id']
             conf = obj['confidence']
+            did = obj.get('did')
+            match_conf = obj.get('match_confidence')
             
             # Draw rectangle
             cv2.rectangle(frame, (x1, y1), (x2, y2), color, thickness)
             
             # Draw tracking ID label (larger and prominent)
             label = f"ID #{tracking_id}"
+            if did:
+                label = f"ID #{tracking_id} | {did}"
             label_conf = f"{conf:.2f}"
+            if did and match_conf is not None:
+                label_conf = f"{conf:.2f} | ReID {float(match_conf):.2f}"
             
             # Background for ID
             (text_width, text_height), _ = cv2.getTextSize(
@@ -173,4 +179,3 @@ class PersonDetector:
             )
         
         return frame
-

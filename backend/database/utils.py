@@ -23,8 +23,10 @@ def generate_feature_id():
 
 def generate_session_id(camera_id, tracking_id):
     """Generate tracking session ID"""
-    timestamp = datetime.now().strftime('%Y%m%d%H%M%S')
-    return f"session_{camera_id}_{tracking_id}_{timestamp}"
+    # Include microseconds + short random suffix to avoid collisions in fast loops
+    timestamp = datetime.now().strftime('%Y%m%d%H%M%S%f')
+    rand = uuid.uuid4().hex[:6]
+    return f"session_{camera_id}_{tracking_id}_{timestamp}_{rand}"
 
 
 def generate_incident_id():

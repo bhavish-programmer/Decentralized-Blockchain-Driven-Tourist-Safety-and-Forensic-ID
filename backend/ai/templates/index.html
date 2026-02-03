@@ -163,6 +163,8 @@
                             </div>
                             <div class="video-container">
                                 <img id="videoFeed1" src="" alt="Camera 1 Feed" class="video-feed">
+                                <video id="webcamFeed1" class="video-feed" autoplay playsinline muted style="display: none;"></video>
+                                <canvas id="webcamOverlay1" class="webcam-overlay" style="display: none;"></canvas>
                                 <div id="noVideoPlaceholder1" class="no-video">
                                     <div class="placeholder-content">
                                         <span class="placeholder-icon">📹</span>
@@ -184,6 +186,8 @@
                             </div>
                             <div class="video-container">
                                 <img id="videoFeed2" src="" alt="Camera 2 Feed" class="video-feed">
+                                <video id="webcamFeed2" class="video-feed" autoplay playsinline muted style="display: none;"></video>
+                                <canvas id="webcamOverlay2" class="webcam-overlay" style="display: none;"></canvas>
                                 <div id="noVideoPlaceholder2" class="no-video">
                                     <div class="placeholder-content">
                                         <span class="placeholder-icon">📹</span>
@@ -240,7 +244,7 @@
 
                 <!-- Detection List -->
                 <div class="card detections-card">
-                    <h2 class="card-title">🎯 Active Detections (Updates every 15s)</h2>
+                    <h2 class="card-title">🎯 Active Detections (Updates every 5s)</h2>
                     <div id="detectionsList" class="detections-list">
                         <div class="empty-state">
                             <span class="empty-icon">📭</span>

@@ -200,6 +200,46 @@ body {
     display: block;
 }
 
+.webcam-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+}
+
+/* Tourist search layout + face image */
+.tourist-info-layout {
+    display: flex;
+    align-items: flex-start;
+    gap: 1rem;
+}
+
+.tourist-info-text {
+    flex: 1;
+}
+
+.face-image-panel {
+    flex: 0 0 auto;
+}
+
+.face-image-large {
+    width: 192px;  /* ~2x2 inches at 96 DPI */
+    height: 192px;
+    object-fit: cover;
+    border-radius: 10px;
+    border: 2px solid var(--success);
+    box-shadow: 0 6px 14px rgba(0, 0, 0, 0.12);
+}
+
+@media (max-width: 640px) {
+    .tourist-info-layout {
+        flex-direction: column;
+        align-items: center;
+    }
+}
+
 .no-video {
     position: absolute;
     inset: 0;

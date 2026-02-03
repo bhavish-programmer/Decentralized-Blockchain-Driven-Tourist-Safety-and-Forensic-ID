@@ -12,18 +12,165 @@ socket.on("stats", (data) => {
 // NEW: store webcam streams
 let webcamStream1 = null;
 let webcamStream2 = null;
+let webcamInterval1 = null;
+let webcamInterval2 = null;
+let webcamFrameId1 = 0;
+let webcamFrameId2 = 0;
+let webcamSending1 = false;
+let webcamSending2 = false;
+
+const WEBCAM_SEND_INTERVAL_MS = 120; // ~8 FPS
+const WEBCAM_MAX_WIDTH = 640;
+
+function drawWebcamOverlay(cameraNum, payload) {
+    const overlay = document.getElementById(`webcamOverlay${cameraNum}`);
+    const video = document.getElementById(`webcamFeed${cameraNum}`);
+    if (!overlay || !video) return;
+
+    const detections = payload?.detections || [];
+    const frameW = payload?.frame_width || WEBCAM_MAX_WIDTH;
+    const frameH = payload?.frame_height || Math.round(frameW * 0.75);
+
+    const container = video.parentElement;
+    const vRect = video.getBoundingClientRect();
+    const cRect = container ? container.getBoundingClientRect() : vRect;
+
+    const displayW = vRect.width || frameW;
+    const displayH = vRect.height || frameH;
+    const dpr = window.devicePixelRatio || 1;
+
+    overlay.width = displayW * dpr;
+    overlay.height = displayH * dpr;
+    overlay.style.width = `${displayW}px`;
+    overlay.style.height = `${displayH}px`;
+    overlay.style.left = `${vRect.left - cRect.left}px`;
+    overlay.style.top = `${vRect.top - cRect.top}px`;
+
+    const ctx = overlay.getContext('2d');
+    ctx.setTransform(1, 0, 0, 1, 0, 0);
+    ctx.scale(dpr, dpr);
+    ctx.clearRect(0, 0, displayW, displayH);
+
+    if (!detections || detections.length === 0) return;
+
+    const scaleX = displayW / frameW;
+    const scaleY = displayH / frameH;
+
+    ctx.strokeStyle = '#10b981';
+    ctx.lineWidth = 2;
+    ctx.font = '14px sans-serif';
+    ctx.fillStyle = '#10b981';
+
+    detections.forEach(det => {
+        const bbox = det.bbox || [];
+        if (bbox.length !== 4) return;
+        const [x1, y1, x2, y2] = bbox;
+        const w = x2 - x1;
+        const h = y2 - y1;
+        if (w <= 0 || h <= 0) return;
+        ctx.strokeRect(x1 * scaleX, y1 * scaleY, w * scaleX, h * scaleY);
+        let label = `ID ${det.tracking_id || 'N/A'}`;
+        if (det.did) {
+            const score = det.match_confidence != null ? ` (${Number(det.match_confidence).toFixed(2)})` : '';
+            label = `ID ${det.tracking_id || 'N/A'} | ${det.did}${score}`;
+        }
+        ctx.fillText(label, x1 * scaleX + 4, Math.max(14, y1 * scaleY - 4));
+    });
+}
+
+function startWebcamStreaming(cameraNum) {
+    const video = document.getElementById(`webcamFeed${cameraNum}`);
+    const overlay = document.getElementById(`webcamOverlay${cameraNum}`);
+    if (!video || !overlay) return;
+
+    overlay.style.display = 'block';
+
+    const captureCanvas = document.createElement('canvas');
+    const captureCtx = captureCanvas.getContext('2d');
+
+    const sendFrame = async () => {
+        const isSending = cameraNum === 1 ? webcamSending1 : webcamSending2;
+        if (isSending) return;
+        if (video.readyState < 2 || !video.videoWidth || !video.videoHeight) return;
+
+        if (cameraNum === 1) webcamSending1 = true;
+        else webcamSending2 = true;
+
+        try {
+            const vw = video.videoWidth;
+            const vh = video.videoHeight;
+            const targetW = Math.min(WEBCAM_MAX_WIDTH, vw);
+            const targetH = Math.round(vh * (targetW / vw));
+
+            if (captureCanvas.width !== targetW || captureCanvas.height !== targetH) {
+                captureCanvas.width = targetW;
+                captureCanvas.height = targetH;
+            }
+
+            captureCtx.drawImage(video, 0, 0, captureCanvas.width, captureCanvas.height);
+            const dataUrl = captureCanvas.toDataURL('image/jpeg', 0.7);
+            const frameId = cameraNum === 1 ? ++webcamFrameId1 : ++webcamFrameId2;
+
+            const response = await fetch('/api/webcam_frame', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    camera: cameraNum,
+                    frame_id: frameId,
+                    image: dataUrl
+                })
+            });
+
+            if (response.ok) {
+                const payload = await response.json();
+                drawWebcamOverlay(cameraNum, payload);
+            }
+        } catch (e) {
+            console.warn('Webcam frame send failed:', e);
+        } finally {
+            if (cameraNum === 1) webcamSending1 = false;
+            else webcamSending2 = false;
+        }
+    };
+
+    const intervalId = setInterval(sendFrame, WEBCAM_SEND_INTERVAL_MS);
+    if (cameraNum === 1) webcamInterval1 = intervalId;
+    else webcamInterval2 = intervalId;
+}
+
+function stopWebcamStreaming(cameraNum) {
+    const overlay = document.getElementById(`webcamOverlay${cameraNum}`);
+    if (overlay) {
+        const ctx = overlay.getContext('2d');
+        ctx.clearRect(0, 0, overlay.width, overlay.height);
+        overlay.style.display = 'none';
+    }
+
+    if (cameraNum === 1 && webcamInterval1) {
+        clearInterval(webcamInterval1);
+        webcamInterval1 = null;
+        webcamFrameId1 = 0;
+        webcamSending1 = false;
+    }
+    if (cameraNum === 2 && webcamInterval2) {
+        clearInterval(webcamInterval2);
+        webcamInterval2 = null;
+        webcamFrameId2 = 0;
+        webcamSending2 = false;
+    }
+}
 
 document.addEventListener('DOMContentLoaded', () => {
     console.log('Dual Camera Dashboard loaded');
     fetchSystemStatus();
     setupEventListeners();
     
-    // Update detection list every 15 seconds to prevent scroll jump
+    // Update detection list every 5 seconds to prevent scroll jump
     detectionUpdateInterval = setInterval(() => {
         if (camera1Running || camera2Running) {
             // Don't update - WebSocket handles it
         }
-    }, 15000);
+    }, 5000);
 });
 
 function setupEventListeners() {
@@ -83,8 +230,15 @@ async function startWebcam(cameraNum) {
         if (cameraNum === 1) webcamStream1 = stream;
         else webcamStream2 = stream;
 
-        const video = document.getElementById(`videoFeed${cameraNum}`);
-        video.srcObject = stream;
+        const img = document.getElementById(`videoFeed${cameraNum}`);
+        const video = document.getElementById(`webcamFeed${cameraNum}`);
+        if (img) img.style.display = "none";
+        if (video) {
+            video.style.display = "block";
+            video.srcObject = stream;
+        }
+
+        startWebcamStreaming(cameraNum);
 
         document.getElementById(`noVideoPlaceholder${cameraNum}`).style.display = "none";
         document.getElementById(`camera${cameraNum}Status`).textContent = 'Active';
@@ -110,6 +264,8 @@ async function startWebcam(cameraNum) {
 }
 
 function stopWebcam(cameraNum) {
+    stopWebcamStreaming(cameraNum);
+
     const stream = cameraNum === 1 ? webcamStream1 : webcamStream2;
     if (stream) {
         stream.getTracks().forEach(track => track.stop());
@@ -117,8 +273,13 @@ function stopWebcam(cameraNum) {
         else webcamStream2 = null;
     }
 
-    const video = document.getElementById(`videoFeed${cameraNum}`);
-    video.srcObject = null;
+    const img = document.getElementById(`videoFeed${cameraNum}`);
+    const video = document.getElementById(`webcamFeed${cameraNum}`);
+    if (video) {
+        video.srcObject = null;
+        video.style.display = "none";
+    }
+    if (img) img.style.display = "block";
 
     document.getElementById(`noVideoPlaceholder${cameraNum}`).style.display = "flex";
     document.getElementById(`camera${cameraNum}Status`).textContent = 'Inactive';
@@ -135,6 +296,13 @@ function stopWebcam(cameraNum) {
     else camera2Running = false;
 
     updateGlobalStatus();
+
+    // notify backend to reset webcam state
+    fetch('/api/stop_webcam', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ camera: cameraNum })
+    }).catch(() => {});
 }
 
 // ========================== UPDATED startCamera ============================ //
@@ -174,6 +342,11 @@ async function startCamera(cameraNum) {
             else camera2Running = true;
             
             document.getElementById(`videoFeed${cameraNum}`).src = `/video_feed_${cameraNum}?t=` + Date.now();
+            const webcamEl = document.getElementById(`webcamFeed${cameraNum}`);
+            if (webcamEl) webcamEl.style.display = 'none';
+            stopWebcamStreaming(cameraNum);
+            const imgEl = document.getElementById(`videoFeed${cameraNum}`);
+            if (imgEl) imgEl.style.display = 'block';
             document.getElementById(`noVideoPlaceholder${cameraNum}`).style.display = 'none';
 
             if (document.getElementById(`recordingIndicator${cameraNum}`)) {
@@ -279,9 +452,9 @@ function updateStats(data) {
     const avgFps = ((data.camera1?.fps || 0) + (data.camera2?.fps || 0)) / 2;
     document.getElementById('fpsValue').textContent = Math.round(avgFps);
     
-    // Update detection list (every 15 seconds to prevent scroll jump)
+    // Update detection list (every 5 seconds to prevent scroll jump)
     const now = Date.now();
-    if (!window.lastDetectionUpdate || now - window.lastDetectionUpdate > 15000) {
+    if (!window.lastDetectionUpdate || now - window.lastDetectionUpdate > 5000) {
         if (data.all_detections && data.all_detections.length > 0) {
             updateDetectionsList(data.all_detections);
         } else {
@@ -299,6 +472,7 @@ function updateDetectionsList(detections) {
             <strong>🎯 ${det.camera} - Tracking ID #${det.tracking_id || 'N/A'}</strong>
             <small>
                 Confidence: ${(det.confidence * 100).toFixed(1)}%<br>
+                ${det.did ? `Matched DID: ${det.did} ${det.match_confidence != null ? `(${Number(det.match_confidence).toFixed(2)})` : ''}<br>` : ''}
                 BBox: [${det.bbox.join(', ')}]
             </small>
         </div>
@@ -362,15 +536,30 @@ function displayTouristInfo(tourist) {
     const infoDiv = document.getElementById('touristInfo');
     
     const statusColor = tourist.status === 'active' ? '#10b981' : '#6b7280';
+
+    const images = tourist.face_images || [];
+    let imageHtml = '';
+    if (images.length > 0) {
+        imageHtml = `
+            <div class="face-image-panel">
+                <img src="${images[0]}" alt="Tourist face" class="face-image-large">
+            </div>
+        `;
+    }
     
     infoDiv.innerHTML = `
-        <p><strong>Name:</strong> ${tourist.name}</p>
-        <p><strong>DID:</strong> ${tourist.did}</p>
-        <p><strong>Nationality:</strong> ${tourist.nationality || 'N/A'}</p>
-        <p><strong>Entry Point:</strong> ${tourist.entry_point}</p>
-        <p><strong>Entry Time:</strong> ${new Date(tourist.entry_timestamp).toLocaleString()}</p>
-        <p><strong>Status:</strong> <span style="color: ${statusColor}; font-weight: 600;">${tourist.status.toUpperCase()}</span></p>
-        <p><strong>Last Seen:</strong> ${tourist.last_seen_camera || 'Not tracked yet'}</p>
+        <div class="tourist-info-layout">
+            <div class="tourist-info-text">
+                <p><strong>Name:</strong> ${tourist.name}</p>
+                <p><strong>DID:</strong> ${tourist.did}</p>
+                <p><strong>Nationality:</strong> ${tourist.nationality || 'N/A'}</p>
+                <p><strong>Entry Point:</strong> ${tourist.entry_point}</p>
+                <p><strong>Entry Time:</strong> ${new Date(tourist.entry_timestamp).toLocaleString()}</p>
+                <p><strong>Status:</strong> <span style="color: ${statusColor}; font-weight: 600;">${tourist.status.toUpperCase()}</span></p>
+                <p><strong>Last Seen:</strong> ${tourist.last_seen_camera || 'Not tracked yet'}</p>
+            </div>
+            ${imageHtml}
+        </div>
     `;
     
     // Store DID for trajectory view

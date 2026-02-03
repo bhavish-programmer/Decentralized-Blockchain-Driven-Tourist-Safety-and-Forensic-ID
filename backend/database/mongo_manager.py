@@ -62,6 +62,15 @@ class MongoManager:
         self.tracking_sessions.create_index([("did", ASCENDING)])
         self.tracking_sessions.create_index([("status", ASCENDING)])
         self.tracking_sessions.create_index([("start_timestamp", DESCENDING)])
+        # TTL: expire ended sessions after 48 hours to prevent unbounded growth
+        try:
+            self.tracking_sessions.create_index(
+                [("end_timestamp", ASCENDING)],
+                expireAfterSeconds=48 * 60 * 60,
+                name="end_timestamp_ttl_48h"
+            )
+        except Exception as e:
+            logger.warning(f"TTL index creation skipped: {e}")
         
         logger.info("MongoDB indexes created")
     
@@ -105,6 +114,13 @@ class MongoManager:
         for feature in features:
             feature['_id'] = str(feature['_id'])
         
+        return features
+
+    def get_all_tourist_features(self):
+        """Get all tourist features (for Re-ID gallery)"""
+        features = list(self.tourist_features.find({}))
+        for feature in features:
+            feature['_id'] = str(feature['_id'])
         return features
     
     def start_tracking_session(self, session_data):
@@ -215,6 +231,20 @@ class MongoManager:
         )
         
         logger.success(f"Tracking session {session_id} linked to DID {did} (Confidence: {match_confidence:.3f})")
+
+    def update_tracking_best_match(self, session_id, match_data):
+        """
+        Store best match metadata (crop/embedding) for auditing/debugging.
+        """
+        self.tracking_sessions.update_one(
+            {'session_id': session_id},
+            {
+                '$set': {
+                    'best_match': match_data,
+                    'updated_at': datetime.now()
+                }
+            }
+        )
     
     def get_active_sessions(self, camera_id=None):
         """Get all active tracking sessions"""
