@@ -70,6 +70,7 @@ is_running_2 = False
 # Keep trackers as globals but don't depend on them to always exist while generator runs.
 tracker_1 = None
 tracker_2 = None
+tracker_lock = threading.Lock()
 
 # Phase 3.1 – Mongo tracking session state
 active_sessions_cam1 = {}   # tracking_id -> session_id
@@ -218,6 +219,19 @@ def compute_face_hash_from_urls(urls):
 
 def utc_now_iso():
     return datetime.utcnow().replace(microsecond=0).isoformat() + "Z"
+
+
+def safe_json_loads(value):
+    if value is None:
+        return None
+    if isinstance(value, dict):
+        return value
+    if isinstance(value, str):
+        try:
+            return json.loads(value)
+        except Exception:
+            return None
+    return None
 
 def extract_largest_person_crop(img_bgr, pad_ratio=0.08):
     """
@@ -909,6 +923,14 @@ def update_combined_stats():
 def index():
     return render_template("index.html")
 
+@app.route("/blockchain")
+def blockchain_page():
+    return render_template("blockchain.html")
+
+@app.route("/about")
+def about_page():
+    return render_template("about.html")
+
 @app.route("/register")
 def register_page():
     """
@@ -947,7 +969,7 @@ def start_camera():
     """
     global video_reader_1, video_reader_2
     global is_running_1, is_running_2
-    global tracker_1, tracker_2
+    global tracker_1, tracker_2, tracker_lock
 
     data = request.get_json() or {}
     cam = int(data.get("camera", 1))
@@ -970,8 +992,9 @@ def start_camera():
                     pass
             video_reader_1 = VideoReader(source)
             # create global tracker object so generator can reuse same instance
-            tracker_1 = ByteTrack()
-            is_running_1 = True
+            with tracker_lock:
+                tracker_1 = ByteTrack()
+                is_running_1 = True
             info = video_reader_1.get_info()
         else:
             if video_reader_2:
@@ -980,8 +1003,9 @@ def start_camera():
                 except Exception:
                     pass
             video_reader_2 = VideoReader(source)
-            tracker_2 = ByteTrack()
-            is_running_2 = True
+            with tracker_lock:
+                tracker_2 = ByteTrack()
+                is_running_2 = True
             info = video_reader_2.get_info()
 
         logger.info(f"Started camera {cam} (source={source})")
@@ -1001,7 +1025,7 @@ def stop_camera():
     """
     global video_reader_1, video_reader_2
     global is_running_1, is_running_2
-    global tracker_1, tracker_2
+    global tracker_1, tracker_2, tracker_lock
     global reid_matches_cam1, reid_matches_cam2
     global reid_match_scores_cam1, reid_match_scores_cam2
     global reid_votes_cam1, reid_votes_cam2
@@ -1010,7 +1034,8 @@ def stop_camera():
 
     try:
         if cam == 1:
-            is_running_1 = False
+            with tracker_lock:
+                is_running_1 = False
             if video_reader_1:
                 try:
                     video_reader_1.release()
@@ -1018,19 +1043,22 @@ def stop_camera():
                     logger.exception("Error releasing video_reader_1")
                 video_reader_1 = None
             # do not immediately destroy tracker_1; let it be GC'd later
-            tracker_1 = None
+            with tracker_lock:
+                tracker_1 = None
             reid_matches_cam1 = {}
             reid_match_scores_cam1 = {}
             reid_votes_cam1 = {}
         else:
-            is_running_2 = False
+            with tracker_lock:
+                is_running_2 = False
             if video_reader_2:
                 try:
                     video_reader_2.release()
                 except Exception:
                     logger.exception("Error releasing video_reader_2")
                 video_reader_2 = None
-            tracker_2 = None
+            with tracker_lock:
+                tracker_2 = None
             reid_matches_cam2 = {}
             reid_match_scores_cam2 = {}
             reid_votes_cam2 = {}
@@ -1047,7 +1075,7 @@ def stop_webcam():
     Stop webcam-based tracking and reset state.
     """
     global is_running_1, is_running_2
-    global tracker_1, tracker_2
+    global tracker_1, tracker_2, tracker_lock
     global webcam_start_time_1, webcam_start_time_2
     global webcam_frame_count_1, webcam_frame_count_2
     global active_sessions_cam1, active_sessions_cam2
@@ -1058,8 +1086,9 @@ def stop_webcam():
     cam = int(request.get_json().get("camera", 1))
 
     if cam == 1:
-        is_running_1 = False
-        tracker_1 = None
+        with tracker_lock:
+            is_running_1 = False
+            tracker_1 = None
         webcam_start_time_1 = None
         webcam_frame_count_1 = 0
         active_sessions_cam1 = {}
@@ -1067,8 +1096,9 @@ def stop_webcam():
         reid_match_scores_cam1 = {}
         reid_votes_cam1 = {}
     else:
-        is_running_2 = False
-        tracker_2 = None
+        with tracker_lock:
+            is_running_2 = False
+            tracker_2 = None
         webcam_start_time_2 = None
         webcam_frame_count_2 = 0
         active_sessions_cam2 = {}
@@ -1084,7 +1114,7 @@ def webcam_frame():
     Receive a webcam frame from the browser and run detection/tracking.
     """
     global detector
-    global tracker_1, tracker_2
+    global tracker_1, tracker_2, tracker_lock
     global is_running_1, is_running_2
     global webcam_frame_count_1, webcam_frame_count_2
     global webcam_start_time_1, webcam_start_time_2
@@ -1113,21 +1143,23 @@ def webcam_frame():
     resized = frame
     frame_h, frame_w = resized.shape[:2]
 
-    if cam == 1:
-        if tracker_1 is None:
-            tracker_1 = ByteTrack()
-        is_running_1 = True
-    else:
-        if tracker_2 is None:
-            tracker_2 = ByteTrack()
-        is_running_2 = True
+    with tracker_lock:
+        if cam == 1:
+            if tracker_1 is None:
+                tracker_1 = ByteTrack()
+            tracker = tracker_1
+            is_running_1 = True
+        else:
+            if tracker_2 is None:
+                tracker_2 = ByteTrack()
+            tracker = tracker_2
+            is_running_2 = True
 
     if detector is None:
         detections = []
     else:
         detections = detector.detect(resized)
 
-    tracker = tracker_1 if cam == 1 else tracker_2
     try:
         tracked = tracker.update(detections)
     except Exception as e:
@@ -1433,6 +1465,90 @@ def api_status():
         "total_persons": current_stats.get("total_persons", 0),
         "device": getattr(detector, "device", "none"),
         "model_loaded": detector is not None
+    })
+
+@app.route("/api/blockchain/ledger", methods=["GET"])
+def blockchain_ledger():
+    limit = request.args.get("limit", 20)
+    try:
+        limit = int(limit)
+    except (TypeError, ValueError):
+        limit = 20
+    limit = max(1, min(limit, 50))
+
+    dids = []
+    if db_manager and db_manager.conn:
+        try:
+            cursor = db_manager.conn.cursor()
+            cursor.execute(
+                "SELECT did, created_at FROM tourists ORDER BY created_at DESC LIMIT ?",
+                (limit,),
+            )
+            dids = [row["did"] for row in cursor.fetchall() if row and row["did"]]
+        except Exception as e:
+            logger.warning("Failed to read DIDs from SQLite: {}", e)
+
+    sessions = []
+    if mongo_manager:
+        try:
+            sessions = list(
+                mongo_manager.tracking_sessions.find(
+                    {"did": {"$ne": None}}
+                )
+                .sort("start_timestamp", -1)
+                .limit(limit)
+            )
+        except Exception as e:
+            logger.warning("Failed to read sessions from Mongo: {}", e)
+
+    fabric_enabled = fabric_client.fabric_enabled()
+    gateway = fabric_client.gateway_health(force=True)
+    gateway_ok = bool(gateway and gateway.get("ok"))
+
+    did_records = []
+    link_records = []
+
+    if fabric_enabled and gateway_ok:
+        for did in dids[:limit]:
+            payload = fabric_client.query_did(did)
+            result = None
+            if isinstance(payload, dict):
+                result = payload.get("result")
+            result = safe_json_loads(result) or result
+            if isinstance(result, dict):
+                did_records.append({
+                    "type": result.get("type", "DID"),
+                    "recordId": result.get("did", did),
+                    "did": result.get("did", did),
+                    "timestamp": result.get("createdAt"),
+                    "org": result.get("createdBy"),
+                    "txId": result.get("txId"),
+                })
+
+        for session in sessions[:limit]:
+            session_id = session.get("session_id")
+            payload = fabric_client.query_link(session_id)
+            result = None
+            if isinstance(payload, dict):
+                result = payload.get("result")
+            result = safe_json_loads(result) or result
+            if isinstance(result, dict):
+                link_records.append({
+                    "type": result.get("type", "LINK"),
+                    "recordId": result.get("sessionId", session_id),
+                    "did": result.get("did"),
+                    "confidence": result.get("confidence"),
+                    "timestamp": result.get("linkedAt"),
+                    "org": result.get("linkedBy"),
+                    "txId": result.get("txId"),
+                })
+
+    return jsonify({
+        "fabricEnabled": fabric_enabled,
+        "gatewayOk": gateway_ok,
+        "gateway": gateway or {"channel": "tourismchannel", "chaincode": "tourist-safety"},
+        "didRecords": did_records,
+        "linkRecords": link_records,
     })
 
 # ----------------------------------------------------

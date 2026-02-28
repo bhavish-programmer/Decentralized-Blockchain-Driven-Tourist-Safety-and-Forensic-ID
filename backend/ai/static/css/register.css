@@ -1,0 +1,358 @@
+@import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Rajdhani:wght@400;500;600;700&display=swap');
+
+body.register-page {
+    font-family: 'Rajdhani', sans-serif;
+    color: #e6ecff;
+    background: #0b1022;
+    min-height: 100vh;
+    position: relative;
+    padding-bottom: 40px;
+}
+
+body.register-page::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    background: url("/static/register_bg.gif") center/cover no-repeat;
+    opacity: 0.72;
+    z-index: -2;
+}
+
+body.register-page::after {
+    content: "";
+    position: fixed;
+    inset: 0;
+    background: radial-gradient(circle at 12% 12%, rgba(255, 196, 0, 0.28), transparent 45%),
+                radial-gradient(circle at 85% 20%, rgba(99, 102, 241, 0.25), transparent 42%),
+                radial-gradient(circle at 30% 80%, rgba(14, 165, 233, 0.18), transparent 46%),
+                linear-gradient(135deg, rgba(12, 18, 36, 0.5), rgba(20, 28, 48, 0.68));
+    z-index: -1;
+}
+
+body.register-page .navbar {
+    background: rgba(14, 20, 38, 0.68);
+    border-bottom: 1px solid rgba(255, 196, 0, 0.25);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.45);
+}
+
+body.register-page .nav-content {
+    max-width: 1920px;
+    padding: 0.8rem 2rem;
+}
+
+body.register-page .nav-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 1.8rem;
+    color: #ffd257;
+    letter-spacing: 0.08em;
+    text-shadow: 0 0 18px rgba(255, 196, 0, 0.4);
+}
+
+body.register-page .subtitle {
+    font-family: 'Rajdhani', sans-serif;
+    font-size: 0.85rem;
+    color: rgba(230, 236, 255, 0.78);
+    letter-spacing: 0.04em;
+}
+
+body.register-page .nav-actions {
+    display: flex;
+    gap: 0.75rem;
+}
+
+body.register-page .nav-actions .btn {
+    background: rgba(59, 130, 246, 0.28);
+    color: #e6ecff;
+    border: 1px solid rgba(29, 78, 216, 0.4);
+    padding: 0 1rem;
+    height: 40px;
+    font-weight: 600;
+    border-radius: 8px;
+}
+
+body.register-page .nav-actions .btn:hover {
+    background: rgba(59, 130, 246, 0.42);
+    box-shadow: 0 0 12px rgba(29, 78, 216, 0.35);
+}
+
+body.register-page .registration-container {
+    max-width: 1600px;
+    margin: 1.5rem auto;
+    padding: 1.5rem 2rem 2.5rem;
+}
+
+body.register-page .registration-card {
+    background: rgba(22, 30, 52, 0.55);
+    border-radius: 20px;
+    padding: 1.75rem;
+    border: 1px solid rgba(255, 196, 0, 0.2);
+    box-shadow: 0 18px 40px rgba(0, 0, 0, 0.4);
+    backdrop-filter: blur(6px) saturate(120%);
+}
+
+body.register-page .registration-header h2 {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 2.2rem;
+    color: #ffd257;
+    margin-bottom: 0.4rem;
+}
+
+body.register-page .registration-header p {
+    color: rgba(230, 236, 255, 0.82);
+    margin-bottom: 1.2rem;
+}
+
+body.register-page .form-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 1rem 1.5rem;
+}
+
+body.register-page .form-field {
+    display: flex;
+    flex-direction: column;
+}
+
+body.register-page .form-field.full-width {
+    grid-column: span 2;
+}
+
+body.register-page .section-heading {
+    font-family: 'Bebas Neue', sans-serif;
+    letter-spacing: 0.06em;
+    font-size: 1.4rem;
+    color: #7dd3fc;
+    margin-bottom: 0.5rem;
+}
+
+body.register-page .section-spacer {
+    margin-top: 0.5rem;
+}
+
+body.register-page .form-field label {
+    font-weight: 600;
+    margin-bottom: 0.4rem;
+    color: rgba(230, 236, 255, 0.85);
+}
+
+body.register-page .form-field input,
+body.register-page .form-field select,
+body.register-page .form-field textarea {
+    padding: 0.7rem;
+    border: 1px solid rgba(95, 168, 255, 0.4);
+    border-radius: 8px;
+    font-size: 1rem;
+    background: rgba(18, 26, 44, 0.85);
+    color: #e6ecff;
+    transition: all 0.3s;
+}
+
+body.register-page .form-field input::placeholder,
+body.register-page .form-field textarea::placeholder {
+    color: rgba(230, 236, 255, 0.45);
+}
+
+body.register-page .form-field input:focus,
+body.register-page .form-field select:focus,
+body.register-page .form-field textarea:focus {
+    outline: none;
+    border-color: #7dd3fc;
+    box-shadow: 0 0 0 3px rgba(125, 211, 252, 0.25);
+}
+
+body.register-page .webcam-section {
+    margin-top: 1.5rem;
+    padding: 1.25rem;
+    background: rgba(18, 26, 44, 0.68);
+    border-radius: 12px;
+    border: 1px solid rgba(95, 168, 255, 0.25);
+}
+
+body.register-page .section-subtitle,
+body.register-page .helper-text {
+    color: rgba(230, 236, 255, 0.75);
+    font-size: 0.95rem;
+    margin-bottom: 0.8rem;
+}
+
+body.register-page .webcam-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.9rem;
+}
+
+body.register-page #webcamVideo {
+    width: 100%;
+    max-width: 520px;
+    border-radius: 12px;
+    background: #000;
+    border: 1px solid rgba(255, 196, 0, 0.25);
+}
+
+body.register-page .capture-preview {
+    display: flex;
+    gap: 0.8rem;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+body.register-page .captured-image {
+    width: 110px;
+    height: 110px;
+    border-radius: 8px;
+    object-fit: cover;
+    border: 2px solid rgba(0, 255, 156, 0.8);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.4);
+}
+
+body.register-page .button-group {
+    gap: 0.75rem;
+}
+
+body.register-page .btn {
+    border-radius: 10px;
+}
+
+body.register-page .btn-primary {
+    background: rgba(59, 130, 246, 0.4);
+    color: #e6ecff;
+    border: 1px solid rgba(29, 78, 216, 0.6);
+}
+
+body.register-page .btn-primary:hover {
+    background: rgba(59, 130, 246, 0.55);
+    box-shadow: 0 0 14px rgba(29, 78, 216, 0.45);
+}
+
+body.register-page .btn-success {
+    background: rgba(16, 185, 129, 0.4);
+    border: 1px solid rgba(34, 197, 94, 0.6);
+    color: #d7ffe8;
+}
+
+body.register-page .btn-success:hover {
+    background: rgba(16, 185, 129, 0.55);
+    box-shadow: 0 0 14px rgba(34, 197, 94, 0.45);
+}
+
+body.register-page .btn-danger {
+    background: rgba(244, 63, 94, 0.4);
+    border: 1px solid rgba(244, 63, 94, 0.6);
+    color: #ffd7df;
+}
+
+body.register-page .btn-danger:hover {
+    background: rgba(244, 63, 94, 0.55);
+    box-shadow: 0 0 14px rgba(244, 63, 94, 0.45);
+}
+
+body.register-page .submit-section {
+    margin-top: 1.5rem;
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+}
+
+body.register-page .primary-submit {
+    min-width: 220px;
+    letter-spacing: 0.04em;
+}
+
+body.register-page .success-modal {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(2, 4, 10, 0.75);
+    z-index: 2000;
+    align-items: center;
+    justify-content: center;
+    backdrop-filter: blur(4px);
+}
+
+body.register-page .success-content {
+    background: rgba(22, 30, 52, 0.9);
+    padding: 2rem;
+    border-radius: 16px;
+    max-width: 520px;
+    text-align: center;
+    border: 1px solid rgba(255, 196, 0, 0.3);
+    color: #e6ecff;
+}
+
+body.register-page .success-title {
+    color: #00ff9c;
+    margin-bottom: 1rem;
+    font-family: 'Bebas Neue', sans-serif;
+}
+
+body.register-page .did-block {
+    margin: 1.5rem 0;
+}
+
+body.register-page .did-label {
+    font-weight: 600;
+    margin-bottom: 0.4rem;
+    color: rgba(230, 236, 255, 0.7);
+}
+
+body.register-page .did-value {
+    color: #ffd257;
+    font-size: 1.25rem;
+    font-weight: 700;
+    letter-spacing: 0.03em;
+}
+
+body.register-page .qr-code-container {
+    margin: 1.5rem 0;
+}
+
+body.register-page .qr-label {
+    font-weight: 600;
+    margin-bottom: 0.75rem;
+    color: rgba(230, 236, 255, 0.7);
+}
+
+body.register-page #qrCode {
+    max-width: 240px;
+    margin: 0 auto;
+    padding: 0.5rem;
+    background: #ffffff;
+    border-radius: 12px;
+}
+
+body.register-page .modal-actions {
+    margin-top: 1.25rem;
+    display: flex;
+    gap: 0.75rem;
+    justify-content: center;
+}
+
+@media (max-width: 1200px) {
+    body.register-page .registration-container {
+        padding: 1.2rem;
+    }
+
+    body.register-page .form-grid {
+        grid-template-columns: 1fr;
+    }
+
+    body.register-page .form-field.full-width {
+        grid-column: span 1;
+    }
+}
+
+@media (max-width: 768px) {
+    body.register-page .nav-actions {
+        flex-wrap: wrap;
+        justify-content: flex-end;
+    }
+
+    body.register-page .submit-section {
+        flex-direction: column;
+    }
+
+    body.register-page .primary-submit {
+        width: 100%;
+    }
+}

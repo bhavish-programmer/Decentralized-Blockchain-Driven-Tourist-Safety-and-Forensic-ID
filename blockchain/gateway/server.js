@@ -65,6 +65,44 @@ app.get("/health", (_req, res) => {
   res.json({ ok: true, channel: CHANNEL, chaincode: CHAINCODE });
 });
 
+app.get("/fabric/did/:did", async (req, res) => {
+  try {
+    const { did } = req.params;
+    const { gateway, contract } = await getContract();
+    const result = await contract.evaluateTransaction("GetDID", did);
+    await gateway.disconnect();
+    const raw = result.toString();
+    let parsed = raw;
+    try {
+      parsed = JSON.parse(raw);
+    } catch (_) {
+      // keep raw string
+    }
+    res.json({ result: parsed });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+app.get("/fabric/link/:sessionId", async (req, res) => {
+  try {
+    const { sessionId } = req.params;
+    const { gateway, contract } = await getContract();
+    const result = await contract.evaluateTransaction("GetLinkBySession", sessionId);
+    await gateway.disconnect();
+    const raw = result.toString();
+    let parsed = raw;
+    try {
+      parsed = JSON.parse(raw);
+    } catch (_) {
+      // keep raw string
+    }
+    res.json({ result: parsed });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
 app.post("/fabric/register", async (req, res) => {
   try {
     const { did, piiHash, faceHash, timestamp } = req.body;

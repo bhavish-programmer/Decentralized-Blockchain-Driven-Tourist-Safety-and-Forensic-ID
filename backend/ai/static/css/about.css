@@ -1,0 +1,388 @@
+:root {
+    --ink: #edf2ff;
+    --muted: #b9c7e6;
+    --pink: #ff6bcb;
+    --blue: #6ad1ff;
+    --purple: #8f7bff;
+    --panel: rgba(18, 20, 36, 0.4);
+    --panel-strong: rgba(22, 24, 44, 0.4);
+    --border: rgba(255, 255, 255, 0.12);
+    --shadow: 0 20px 50px rgba(7, 10, 22, 0.55);
+}
+
+* {
+    box-sizing: border-box;
+}
+
+body.about-page {
+    margin: 0;
+    font-family: "Space Grotesk", sans-serif;
+    color: var(--ink);
+    min-height: 100vh;
+    background: #070a16;
+}
+
+.about-bg {
+    position: fixed;
+    inset: 0;
+    background: url("../media/about_bg.gif") center/cover no-repeat fixed;
+    filter: brightness(0.8) saturate(1.35);
+    z-index: 0;
+}
+
+.about-overlay {
+    position: fixed;
+    inset: 0;
+    background: radial-gradient(circle at 15% 20%, rgba(255, 107, 203, 0.25), transparent 55%),
+                radial-gradient(circle at 85% 30%, rgba(106, 209, 255, 0.25), transparent 60%),
+                linear-gradient(120deg, rgba(8, 10, 18, 0.5), rgba(10, 12, 20, 0.6));
+    z-index: 1;
+}
+
+.about-nav {
+    position: sticky;
+    top: 0;
+    z-index: 5;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1.5rem 3rem;
+    background: rgba(9, 12, 24, 0.92);
+    border-bottom: 1px solid var(--border);
+    backdrop-filter: blur(14px);
+}
+
+.about-brand {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.about-logo {
+    width: 52px;
+    height: 52px;
+    border-radius: 16px;
+    display: grid;
+    place-items: center;
+    font-size: 1.6rem;
+    background: rgba(255, 107, 203, 0.16);
+    border: 1px solid rgba(255, 107, 203, 0.5);
+    box-shadow: 0 0 24px rgba(255, 107, 203, 0.35);
+}
+
+.about-title {
+    font-family: "Kanit", sans-serif;
+    font-size: 1.25rem;
+    letter-spacing: 0.04em;
+}
+
+.about-subtitle {
+    color: var(--muted);
+    font-size: 0.9rem;
+}
+
+.about-actions {
+    display: flex;
+    gap: 0.75rem;
+}
+
+.about-btn {
+    padding: 0.7rem 1.2rem;
+    border-radius: 999px;
+    border: 1px solid transparent;
+    font-size: 0.9rem;
+    text-decoration: none;
+    color: var(--ink);
+    background: rgba(255, 255, 255, 0.08);
+    transition: all 0.2s ease;
+}
+
+.about-btn.neon {
+    background: linear-gradient(135deg, rgba(255, 107, 203, 0.35), rgba(143, 123, 255, 0.25));
+    border: 1px solid rgba(255, 107, 203, 0.6);
+    box-shadow: 0 0 20px rgba(255, 107, 203, 0.4);
+}
+
+.about-btn.ghost {
+    border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.about-btn:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 8px 20px rgba(4, 6, 16, 0.5);
+}
+
+.about-shell {
+    position: relative;
+    z-index: 2;
+    max-width: 1250px;
+    margin: 0 auto;
+    padding: 2rem 3rem 4rem;
+}
+
+.about-hero {
+    margin-bottom: 2rem;
+}
+
+.hero-card {
+    padding: 2.4rem;
+    border-radius: 28px;
+    background: var(--panel);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    box-shadow: var(--shadow);
+}
+
+.hero-kicker {
+    text-transform: uppercase;
+    letter-spacing: 0.3em;
+    font-size: 0.7rem;
+    color: var(--pink);
+}
+
+.hero-card h1 {
+    font-family: "Kanit", sans-serif;
+    font-size: 2.1rem;
+    margin: 0.6rem 0 1rem;
+}
+
+.hero-text {
+    color: var(--muted);
+    line-height: 1.7;
+    margin-bottom: 1.5rem;
+}
+
+.hero-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.6rem;
+}
+
+.tag {
+    padding: 0.3rem 0.9rem;
+    border-radius: 999px;
+    background: rgba(106, 209, 255, 0.15);
+    border: 1px solid rgba(106, 209, 255, 0.45);
+    font-size: 0.75rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+}
+
+.about-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 1.5rem;
+    margin-bottom: 2rem;
+}
+
+.about-card {
+    background: var(--panel);
+    border-radius: 24px;
+    padding: 1.6rem;
+    border: 1px solid var(--border);
+    box-shadow: var(--shadow);
+}
+
+.about-card.glow {
+    border-color: rgba(143, 123, 255, 0.55);
+    box-shadow: 0 0 26px rgba(143, 123, 255, 0.35);
+}
+
+.about-card h2 {
+    font-family: "Kanit", sans-serif;
+    margin: 0 0 1rem;
+    font-size: 1.1rem;
+}
+
+.about-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: grid;
+    gap: 0.7rem;
+    color: var(--muted);
+    font-size: 0.95rem;
+}
+
+.chip {
+    display: inline-flex;
+    padding: 0.15rem 0.6rem;
+    border-radius: 999px;
+    border: 1px solid rgba(255, 107, 203, 0.45);
+    color: var(--pink);
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    margin-right: 0.5rem;
+}
+
+.about-team {
+    background: var(--panel-strong);
+    border-radius: 28px;
+    padding: 2rem;
+    border: 1px solid var(--border);
+    box-shadow: var(--shadow);
+}
+
+.capabilities {
+    margin-bottom: 2rem;
+}
+
+.cap-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+    gap: 1rem;
+}
+
+.cap-card {
+    padding: 1.2rem;
+    border-radius: 18px;
+    background: rgba(255, 255, 255, 0.06);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    box-shadow: 0 10px 30px rgba(6, 8, 18, 0.35);
+}
+
+.cap-card h3 {
+    margin: 0 0 0.4rem;
+    font-size: 1rem;
+    color: var(--pink);
+}
+
+.cap-card p {
+    margin: 0;
+    color: var(--muted);
+    font-size: 0.9rem;
+    line-height: 1.5;
+}
+
+.research {
+    margin-bottom: 2rem;
+}
+
+.research-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 1.5rem;
+}
+
+.section-header h2 {
+    font-family: "Kanit", sans-serif;
+    margin: 0 0 0.4rem;
+}
+
+.section-header p {
+    margin: 0 0 1.5rem;
+    color: var(--muted);
+}
+
+.team-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1rem;
+}
+
+.team-card {
+    padding: 1rem 1.2rem;
+    border-radius: 18px;
+    background: rgba(255, 255, 255, 0.06);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.team-card.lead {
+    border-color: rgba(255, 107, 203, 0.55);
+    box-shadow: 0 0 18px rgba(255, 107, 203, 0.3);
+}
+
+.team-card h3 {
+    margin: 0 0 0.4rem;
+    font-size: 1rem;
+}
+
+.role {
+    margin: 0;
+    color: var(--muted);
+    font-size: 0.85rem;
+}
+
+.guides {
+    margin-top: 2rem;
+}
+
+.guides h3 {
+    font-family: "Kanit", sans-serif;
+    margin: 0 0 1rem;
+}
+
+.guide-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 1rem;
+}
+
+.guide-card {
+    padding: 1rem 1.2rem;
+    border-radius: 18px;
+    background: rgba(106, 209, 255, 0.08);
+    border: 1px solid rgba(106, 209, 255, 0.4);
+}
+
+.guide-name {
+    display: block;
+    font-weight: 600;
+}
+
+.guide-role {
+    color: var(--muted);
+    font-size: 0.85rem;
+}
+
+.about-footer {
+    margin-top: 2rem;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 1rem;
+}
+
+.footer-card {
+    padding: 1.2rem;
+    border-radius: 18px;
+    background: rgba(10, 12, 22, 0.7);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    box-shadow: var(--shadow);
+}
+
+.footer-card h3 {
+    margin: 0 0 0.5rem;
+    font-family: "Kanit", sans-serif;
+    color: var(--blue);
+}
+
+.footer-card p {
+    margin: 0.2rem 0;
+    color: var(--muted);
+    font-size: 0.9rem;
+}
+
+@media (max-width: 900px) {
+    .about-nav {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 1rem;
+    }
+    .about-shell {
+        padding: 1.5rem;
+    }
+}
+
+@media (max-width: 600px) {
+    .about-actions {
+        flex-direction: column;
+        width: 100%;
+    }
+    .about-btn {
+        width: 100%;
+        text-align: center;
+    }
+    .hero-card h1 {
+        font-size: 1.6rem;
+    }
+}

@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Blockchain Ledger - Smart Tourist Safety</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/blockchain.css') }}">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;700&family=Space+Grotesk:wght@400;500;600&display=swap" rel="stylesheet">
+</head>
+<body class="blockchain-page">
+    <div class="blockchain-bg" aria-hidden="true"></div>
+    <div class="blockchain-overlay" aria-hidden="true"></div>
+
+    <nav class="bc-nav">
+        <div class="bc-brand">
+            <div class="bc-logo">⛓️</div>
+            <div>
+                <div class="bc-title">Blockchain Ledger</div>
+                <div class="bc-subtitle">Smart Tourist Safety System</div>
+            </div>
+        </div>
+        <div class="bc-actions">
+            <a class="bc-btn ghost" href="/">← Back to Dashboard</a>
+            <a class="bc-btn neon" href="/register">➕ Register Tourist</a>
+        </div>
+    </nav>
+
+    <main class="bc-shell">
+        <section class="bc-hero">
+            <div class="hero-card">
+                <p class="hero-kicker">Purpose</p>
+                <h1>Forensic Integrity for Tourist Identity & Tracking</h1>
+                <p class="hero-text">
+                    This ledger captures cryptographic fingerprints of identity and
+                    re-identification events. It provides tamper-evident proof that a
+                    DID was registered and later linked to a tracking session, without
+                    exposing raw PII or biometric data.
+                </p>
+                <div class="hero-metrics">
+                    <div class="metric">
+                        <span class="metric-label">Network</span>
+                        <span class="metric-value">Hyperledger Fabric</span>
+                    </div>
+                    <div class="metric">
+                        <span class="metric-label">Channel</span>
+                        <span class="metric-value" id="bcChannel">tourismchannel</span>
+                    </div>
+                    <div class="metric">
+                        <span class="metric-label">Chaincode</span>
+                        <span class="metric-value" id="bcChaincode">tourist-safety</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="bc-grid">
+            <div class="bc-card glow">
+                <h2>Tech Stack</h2>
+                <ul class="bc-list">
+                    <li><span class="pill">Fabric v2.5</span> Permissioned consortium ledger</li>
+                    <li><span class="pill">Node Gateway</span> Express + Fabric SDK</li>
+                    <li><span class="pill">Chaincode</span> JavaScript smart contract</li>
+                    <li><span class="pill">TLS</span> CA-backed identities for Org1/Org2/Org3</li>
+                </ul>
+            </div>
+            <div class="bc-card">
+                <h2>Why Blockchain</h2>
+                <ul class="bc-list">
+                    <li>Immutable audit trail for DID registration</li>
+                    <li>Proof of tracking linkage with confidence score</li>
+                    <li>Multi-organization endorsement for sensitive events</li>
+                    <li>Off-chain PII, on-chain hashes only</li>
+                </ul>
+            </div>
+            <div class="bc-card">
+                <h2>Security Posture</h2>
+                <ul class="bc-list">
+                    <li>DID, PII hash, and face hash are recorded only</li>
+                    <li>Fabric CA manages identities</li>
+                    <li>Ledger access is restricted by MSP roles</li>
+                    <li>Gateway access is internal to this system</li>
+                </ul>
+            </div>
+        </section>
+
+        <section class="bc-ledger">
+            <div class="ledger-header">
+                <div>
+                    <h2>Ledger Activity</h2>
+                    <p class="ledger-sub">Auto-loaded from the ledger using recent DIDs and sessions.</p>
+                </div>
+                <div class="ledger-actions">
+                    <span id="ledgerStatus" class="status-badge">Loading…</span>
+                    <button id="refreshLedger" class="bc-btn ghost">Refresh</button>
+                </div>
+            </div>
+            <div class="ledger-table-wrap">
+                <table class="ledger-table">
+                    <thead>
+                        <tr>
+                            <th>Type</th>
+                            <th>Record ID</th>
+                            <th>DID</th>
+                            <th>Confidence</th>
+                            <th>Timestamp (UTC)</th>
+                            <th>Org</th>
+                            <th>Tx</th>
+                        </tr>
+                    </thead>
+                    <tbody id="ledgerBody">
+                        <tr>
+                            <td colspan="7" class="ledger-empty">Loading ledger data…</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+    </main>
+
+    <script src="{{ url_for('static', filename='js/blockchain.js') }}"></script>
+</body>
+</html>

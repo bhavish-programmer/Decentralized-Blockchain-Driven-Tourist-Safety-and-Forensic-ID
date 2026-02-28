@@ -22,6 +22,12 @@ let webcamSending2 = false;
 const WEBCAM_SEND_INTERVAL_MS = 120; // ~8 FPS
 const WEBCAM_MAX_WIDTH = 640;
 
+let activeCamera = 1;
+const cameraConfig = {
+    1: { source: 'video', videoPath: 'videos/sample.mp4', esp32Url: '' },
+    2: { source: 'video', videoPath: 'videos/sample.mp4', esp32Url: '' }
+};
+
 function drawWebcamOverlay(cameraNum, payload) {
     const overlay = document.getElementById(`webcamOverlay${cameraNum}`);
     const video = document.getElementById(`webcamFeed${cameraNum}`);
@@ -164,6 +170,7 @@ document.addEventListener('DOMContentLoaded', () => {
     console.log('Dual Camera Dashboard loaded');
     fetchSystemStatus();
     setupEventListeners();
+    applyConfigToUI(1);
     
     // Update detection list every 5 seconds to prevent scroll jump
     detectionUpdateInterval = setInterval(() => {
@@ -174,43 +181,75 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 function setupEventListeners() {
-    document.getElementById('videoSource1').addEventListener('change', () => handleSourceChange(1));
-    document.getElementById('videoSource2').addEventListener('change', () => handleSourceChange(2));
+    const sourceSelect = document.getElementById('videoSource');
+    const cameraSelect = document.getElementById('activeCameraSelect');
+    const videoPath = document.getElementById('videoPath');
+    const esp32Url = document.getElementById('esp32Url');
+
+    if (sourceSelect) sourceSelect.addEventListener('change', handleSourceChange);
+    if (cameraSelect) cameraSelect.addEventListener('change', (event) => setActiveCamera(event.target.value));
+    if (videoPath) videoPath.addEventListener('input', syncConfigFromUI);
+    if (esp32Url) esp32Url.addEventListener('input', syncConfigFromUI);
 }
 
+function syncConfigFromUI() {
+    const source = document.getElementById('videoSource')?.value || 'video';
+    const videoPath = document.getElementById('videoPath')?.value || 'videos/sample.mp4';
+    const esp32Url = document.getElementById('esp32Url')?.value || '';
 
-function switchTab(cameraNum) {
-    // Update tab buttons
-    const tabs = document.querySelectorAll('.tab-btn');
-    tabs.forEach((tab, index) => {
-        if (index + 1 === cameraNum) {
-            tab.classList.add('active');
-        } else {
-            tab.classList.remove('active');
-        }
-    });
-    
-    // Update settings panels
-    const settings = document.querySelectorAll('.camera-settings');
-    settings.forEach((setting, index) => {
-        if (index + 1 === cameraNum) {
-            setting.classList.add('active');
-        } else {
-            setting.classList.remove('active');
-        }
-    });
+    if (!cameraConfig[activeCamera]) {
+        cameraConfig[activeCamera] = { source: 'video', videoPath: 'videos/sample.mp4', esp32Url: '' };
+    }
+
+    cameraConfig[activeCamera].source = source;
+    cameraConfig[activeCamera].videoPath = videoPath;
+    cameraConfig[activeCamera].esp32Url = esp32Url;
 }
 
+function applyConfigToUI(cameraNum) {
+    const cfg = cameraConfig[cameraNum] || { source: 'video', videoPath: 'videos/sample.mp4', esp32Url: '' };
+    const sourceSelect = document.getElementById('videoSource');
+    const videoPath = document.getElementById('videoPath');
+    const esp32Url = document.getElementById('esp32Url');
+    const cameraLabel = document.getElementById('activeCameraLabel');
+    const cameraSelect = document.getElementById('activeCameraSelect');
 
-function handleSourceChange(camera) {
-    const source = document.getElementById(`videoSource${camera}`).value;
-    const videoPathGroup = document.getElementById(`videoPathGroup${camera}`);
-    const esp32UrlGroup = document.getElementById(`esp32UrlGroup${camera}`);
+    if (cameraSelect) cameraSelect.value = String(cameraNum);
+    if (sourceSelect) sourceSelect.value = cfg.source || 'video';
+    if (videoPath) videoPath.value = cfg.videoPath || 'videos/sample.mp4';
+    if (esp32Url) esp32Url.value = cfg.esp32Url || '';
+    if (cameraLabel) cameraLabel.textContent = `Camera ${cameraNum}`;
+
+    handleSourceChange();
+}
+
+function setActiveCamera(cameraNum) {
+    syncConfigFromUI();
+    activeCamera = Number(cameraNum) || 1;
+    applyConfigToUI(activeCamera);
+}
+
+function handleSourceChange() {
+    const source = document.getElementById('videoSource')?.value || 'video';
+    const videoPathGroup = document.getElementById('videoPathGroup');
+    const esp32UrlGroup = document.getElementById('esp32UrlGroup');
     
     if (videoPathGroup && esp32UrlGroup) {
         videoPathGroup.style.display = source === 'video' ? 'block' : 'none';
         esp32UrlGroup.style.display = source === 'esp32cam' ? 'block' : 'none';
     }
+
+    syncConfigFromUI();
+}
+
+function startActiveCamera() {
+    syncConfigFromUI();
+    return startCamera(activeCamera);
+}
+
+function stopActiveCamera() {
+    syncConfigFromUI();
+    return stopCamera(activeCamera);
 }
 
 // =============== NEW WEBCAM FUNCTIONS (REGISTER.JS STYLE) ================= //
@@ -308,7 +347,8 @@ function stopWebcam(cameraNum) {
 // ========================== UPDATED startCamera ============================ //
 
 async function startCamera(cameraNum) {
-    const source = document.getElementById(`videoSource${cameraNum}`).value;
+    const cfg = cameraConfig[cameraNum] || {};
+    const source = cfg.source || 'video';
 
     // NEW: detect webcam mode
     if (source === "webcam") {
@@ -316,8 +356,8 @@ async function startCamera(cameraNum) {
     }
 
     // ORIGINAL CODE FOR VIDEO + ESP32
-    const videoPath = document.getElementById(`videoPath${cameraNum}`)?.value || 'videos/sample.mp4';
-    const esp32Url = document.getElementById(`esp32Url${cameraNum}`)?.value || '';
+    const videoPath = cfg.videoPath || 'videos/sample.mp4';
+    const esp32Url = cfg.esp32Url || '';
 
     const payload = {
         camera: cameraNum,
@@ -377,10 +417,12 @@ async function startCamera(cameraNum) {
 // ========================== UPDATED stopCamera ============================ //
 
 async function stopCamera(cameraNum) {
-    const source = document.getElementById(`videoSource${cameraNum}`).value;
+    const cfg = cameraConfig[cameraNum] || {};
+    const source = cfg.source || 'video';
+    const webcamStream = cameraNum === 1 ? webcamStream1 : webcamStream2;
 
     // NEW: stop webcam without backend call
-    if (source === "webcam") {
+    if (source === "webcam" || webcamStream) {
         stopWebcam(cameraNum);
         alert(`⏹️ Webcam for Camera ${cameraNum} stopped`);
         return;

@@ -26,7 +26,7 @@ backend/database/sqlite/.master_key
 
 # ML model weights / artifacts
 backend/ai/models/
-*.pt
+*x.pt
 *.pth
 *.onnx
 *.engine

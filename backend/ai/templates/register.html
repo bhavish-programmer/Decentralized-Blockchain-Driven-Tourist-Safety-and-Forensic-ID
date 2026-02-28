@@ -5,155 +5,37 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Tourist Registration - Smart Safety System</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
-    <style>
-        .registration-container {
-            max-width: 900px;
-            margin: 2rem auto;
-            padding: 2rem;
-        }
-        
-        .registration-card {
-            background: white;
-            border-radius: 15px;
-            padding: 2rem;
-            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
-        }
-        
-        .form-grid {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 1.5rem;
-            margin-top: 1.5rem;
-        }
-        
-        .form-field {
-            display: flex;
-            flex-direction: column;
-        }
-        
-        .form-field.full-width {
-            grid-column: span 2;
-        }
-        
-        .form-field label {
-            font-weight: 600;
-            margin-bottom: 0.5rem;
-            color: #1f2937;
-        }
-        
-        .form-field input,
-        .form-field select,
-        .form-field textarea {
-            padding: 0.75rem;
-            border: 2px solid #e5e7eb;
-            border-radius: 8px;
-            font-size: 1rem;
-            transition: all 0.3s;
-        }
-        
-        .form-field input:focus,
-        .form-field select:focus,
-        .form-field textarea:focus {
-            outline: none;
-            border-color: #667eea;
-            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
-        }
-        
-        .webcam-section {
-            margin-top: 2rem;
-            padding: 1.5rem;
-            background: #f9fafb;
-            border-radius: 10px;
-        }
-        
-        .webcam-container {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 1rem;
-        }
-        
-        #webcamVideo {
-            width: 100%;
-            max-width: 480px;
-            border-radius: 10px;
-            background: #000;
-        }
-        
-        .capture-preview {
-            display: flex;
-            gap: 1rem;
-            flex-wrap: wrap;
-            justify-content: center;
-            margin-top: 1rem;
-        }
-        
-        .captured-image {
-            width: 120px;
-            height: 120px;
-            border-radius: 8px;
-            object-fit: cover;
-            border: 3px solid #10b981;
-        }
-        
-        .submit-section {
-            margin-top: 2rem;
-            display: flex;
-            gap: 1rem;
-            justify-content: center;
-        }
-        
-        .success-modal {
-            display: none;
-            position: fixed;
-            inset: 0;
-            background: rgba(0, 0, 0, 0.7);
-            z-index: 2000;
-            align-items: center;
-            justify-content: center;
-        }
-        
-        .success-content {
-            background: white;
-            padding: 2rem;
-            border-radius: 15px;
-            max-width: 500px;
-            text-align: center;
-        }
-        
-        .qr-code-container {
-            margin: 2rem 0;
-        }
-        
-        #qrCode {
-            max-width: 250px;
-            margin: 0 auto;
-        }
-    </style>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/register.css') }}">
 </head>
-<body>
+<body class="register-page">
     <!-- Navigation -->
     <nav class="navbar">
         <div class="nav-content">
             <h1 class="nav-title">
-                <span class="icon">📋</span>
+                <span class="icon">🛡️</span>
                 Tourist Registration
-                <span class="subtitle">Smart Safety System</span>
+                <span class="subtitle">Avengers Protocol</span>
             </h1>
-            <a href="/" class="btn btn-primary">← Back to Dashboard</a>
+            <div class="nav-actions">
+                <a href="/" class="btn btn-primary">🏠 Dashboard</a>
+                <a href="/blockchain" class="btn btn-primary">🔗 Blockchain</a>
+                <a href="/about" class="btn btn-primary">✨ About</a>
+            </div>
         </div>
     </nav>
 
     <div class="registration-container">
         <div class="registration-card">
-            <h2 style="color: #667eea; margin-bottom: 0.5rem;">🌍 New Tourist Registration</h2>
-            <p style="color: #6b7280; margin-bottom: 2rem;">Please fill in your details for safe tracking during your visit</p>
+            <div class="registration-header">
+                <h2>🌍 New Tourist Registration</h2>
+                <p>Complete the Avengers-grade onboarding to enable secure tracking throughout your visit.</p>
+            </div>
 
             <form id="registrationForm">
                 <div class="form-grid">
                     <!-- Personal Details -->
                     <div class="form-field full-width">
-                        <h3 style="color: #1f2937; margin-bottom: 1rem;">📝 Personal Information</h3>
+                        <h3 class="section-heading">📝 Personal Information</h3>
                     </div>
 
                     <div class="form-field">
@@ -182,8 +64,8 @@
                     </div>
 
                     <!-- Contact Details -->
-                    <div class="form-field full-width" style="margin-top: 1rem;">
-                        <h3 style="color: #1f2937; margin-bottom: 1rem;">📞 Contact Information</h3>
+                    <div class="form-field full-width section-spacer">
+                        <h3 class="section-heading">📞 Contact Information</h3>
                     </div>
 
                     <div class="form-field">
@@ -197,8 +79,8 @@
                     </div>
 
                     <!-- Travel Details -->
-                    <div class="form-field full-width" style="margin-top: 1rem;">
-                        <h3 style="color: #1f2937; margin-bottom: 1rem;">✈️ Travel Information</h3>
+                    <div class="form-field full-width section-spacer">
+                        <h3 class="section-heading">✈️ Travel Information</h3>
                     </div>
 
                     <div class="form-field">
@@ -227,8 +109,8 @@
 
                 <!-- Webcam Section -->
                 <div class="webcam-section">
-                    <h3 style="color: #1f2937; margin-bottom: 1rem;">📸 Biometric Capture</h3>
-                    <p style="color: #6b7280; margin-bottom: 1rem;">Please capture your photo from multiple angles for identification</p>
+                    <h3 class="section-heading">📸 Biometric Capture</h3>
+                    <p class="section-subtitle">Capture at least 2-3 photos from different angles for stronger identity matching.</p>
 
                     <div class="webcam-container">
                         <video id="webcamVideo" autoplay playsinline></video>
@@ -249,9 +131,7 @@
                             <!-- Captured images will appear here -->
                         </div>
 
-                        <p style="color: #6b7280; font-size: 0.9rem; margin-top: 1rem;">
-                            💡 Tip: Capture at least 2-3 photos from different angles for better tracking
-                        </p>
+                        <p class="helper-text">💡 Tip: Center your face and vary angles for highest accuracy.</p>
                     </div>
                 </div>
 
@@ -260,7 +140,7 @@
                     <button type="button" class="btn btn-danger" onclick="resetForm()">
                         ❌ Reset Form
                     </button>
-                    <button type="submit" class="btn btn-success" style="min-width: 200px;">
+                    <button type="submit" class="btn btn-success primary-submit">
                         ✅ Register Tourist
                     </button>
                 </div>
@@ -271,19 +151,19 @@
     <!-- Success Modal -->
     <div id="successModal" class="success-modal">
         <div class="success-content">
-            <h2 style="color: #10b981; margin-bottom: 1rem;">✅ Registration Successful!</h2>
+            <h2 class="success-title">✅ Registration Successful!</h2>
             
-            <div style="margin: 1.5rem 0;">
-                <p style="font-weight: 600; margin-bottom: 0.5rem;">Digital Identity (DID):</p>
-                <p id="displayDID" style="color: #667eea; font-size: 1.2rem; font-weight: bold;"></p>
+            <div class="did-block">
+                <p class="did-label">Digital Identity (DID):</p>
+                <p id="displayDID" class="did-value"></p>
             </div>
 
             <div class="qr-code-container">
-                <p style="font-weight: 600; margin-bottom: 1rem;">Scan QR Code for Credentials:</p>
+                <p class="qr-label">Scan QR Code for Credentials:</p>
                 <div id="qrCode"></div>
             </div>
 
-            <div style="margin-top: 1.5rem;">
+            <div class="modal-actions">
                 <button class="btn btn-primary" onclick="closeModal()">
                     ✨ Continue
                 </button>

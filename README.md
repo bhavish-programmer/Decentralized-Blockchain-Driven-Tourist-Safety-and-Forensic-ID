@@ -767,10 +767,8 @@ cd frontend/dashboard && npm test  # Frontend tests
 |------|------|--------|----------|
 | [Dipanshu Shamkuwar] | Project Lead & AI Engineer | [@username](https://github.com/Dipanshu-S) | [Profile](https://linkedin.com/in/username) |
 | [Bhavish Domale] | Blockchain Developer | [@username2](https://github.com/username2) | [Profile](https://linkedin.com/in/username2) | 
-| [Abhishek R. Tarhekar] | Full-Stack Developer | [@username3](https://github.com/username3) | [Profile](https://linkedin.com/in/username3) |
-| [Tanvi Solanke] | Mobile App Developer | [@username4](https://github.com/username4) | [Profile](https://linkedin.com/in/username4) |
-| [Rutika Wankar] | DevOps Engineer | [@username5](https://github.com/username5) | [Profile](https://linkedin.com/in/username5) 
-| [Puja L.Turkar] | DevOps Engineer | [@username5](https://github.com/username5) | [Profile](https://linkedin.com/in/username5)   (To be updated by members themselfs after access grant)
+| [Bhumika Chadokar] | Full-Stack Developer | [@username3](https://github.com/username3) | [Profile](https://linkedin.com/in/username3) |
+| [Arushi Kamble] | DevOps Engineer | [@username5](https://github.com/username5) | [Profile](https://linkedin.com/in/username5)   (To be updated by members themselfs after access grant)
 
 ### Mentors & Advisors
 

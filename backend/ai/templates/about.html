@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>About - Smart Tourist Safety</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/about.css') }}">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;500;700&family=Space+Grotesk:wght@400;500;600&display=swap" rel="stylesheet">
+</head>
+<body class="about-page">
+    <div class="about-bg" aria-hidden="true"></div>
+    <div class="about-overlay" aria-hidden="true"></div>
+
+    <nav class="about-nav">
+        <div class="about-brand">
+            <div class="about-logo">🌸</div>
+            <div>
+                <div class="about-title">About The System</div>
+                <div class="about-subtitle">Smart Tourist Safety Platform</div>
+            </div>
+        </div>
+        <div class="about-actions">
+            <a class="about-btn ghost" href="/">← Back to Dashboard</a>
+            <a class="about-btn neon" href="/register">➕ Register Tourist</a>
+        </div>
+    </nav>
+
+    <main class="about-shell">
+        <section class="about-hero">
+            <div class="hero-card">
+                <p class="hero-kicker">Purpose</p>
+                <h1>AI + Blockchain for Tourist Safety & Forensic Trust</h1>
+                <p class="hero-text">
+                    This system combines real-time people tracking, Re-ID matching, and
+                    tamper-evident blockchain logging to build a safety net for tourists.
+                    It prioritizes privacy by keeping sensitive data off-chain while
+                    storing cryptographic proof on-chain.
+                </p>
+                <div class="hero-tags">
+                    <span class="tag">Real-Time Tracking</span>
+                    <span class="tag">Forensic Integrity</span>
+                    <span class="tag">Privacy-First</span>
+                </div>
+            </div>
+        </section>
+
+        <section class="about-grid">
+            <div class="about-card glow">
+                <h2>Current Demo Stack (In This Repo)</h2>
+                <ul class="about-list">
+                    <li><span class="chip">Flask + Socket.IO</span> Real-time dashboard & APIs</li>
+                    <li><span class="chip">YOLOv8n</span> Person detection (CPU-friendly)</li>
+                    <li><span class="chip">ByteTrack</span> Multi-object tracking</li>
+                    <li><span class="chip">OSNet x0.25</span> Re-ID embeddings</li>
+                    <li><span class="chip">SQLite</span> Encrypted PII (off-chain)</li>
+                    <li><span class="chip">MongoDB</span> Feature bank + sessions</li>
+                    <li><span class="chip">Hyperledger Fabric</span> DID + link proofs</li>
+                </ul>
+            </div>
+            <div class="about-card">
+                <h2>Production Stack (Planned in README)</h2>
+                <ul class="about-list">
+                    <li><span class="chip">Fabric 2.5</span> Consortium ledger</li>
+                    <li><span class="chip">Node Chaincode</span> Smart contracts</li>
+                    <li><span class="chip">PostgreSQL + Mongo</span> Off-chain storage</li>
+                    <li><span class="chip">Kafka + Flink</span> Streaming pipeline</li>
+                    <li><span class="chip">React / RN / Next</span> UI + Mobile</li>
+                    <li><span class="chip">Kubernetes</span> Scale-out deployment</li>
+                </ul>
+            </div>
+            <div class="about-card">
+                <h2>What Blockchain Solves</h2>
+                <ul class="about-list">
+                    <li>Immutable proof of DID registration</li>
+                    <li>Audit trail for re-identification sessions</li>
+                    <li>Multi-org governance for incident logs</li>
+                    <li>Integrity without exposing raw PII</li>
+                </ul>
+            </div>
+        </section>
+
+        <section class="capabilities">
+            <div class="section-header">
+                <h2>System Capabilities</h2>
+                <p>Key strengths of the deployed demo and the planned production system.</p>
+            </div>
+            <div class="cap-grid">
+                <div class="cap-card">
+                    <h3>Dual-Camera Tracking</h3>
+                    <p>Real-time detection and tracking across multiple feeds with ByteTrack.</p>
+                </div>
+                <div class="cap-card">
+                    <h3>Cross-Camera Re-ID</h3>
+                    <p>OSNet embeddings link identities across cameras with confidence scores.</p>
+                </div>
+                <div class="cap-card">
+                    <h3>Encrypted PII</h3>
+                    <p>PII is encrypted in SQLite; only hashes are written on-chain.</p>
+                </div>
+                <div class="cap-card">
+                    <h3>Blockchain Audit Trail</h3>
+                    <p>Hyperledger Fabric logs DID registration and tracking links.</p>
+                </div>
+            </div>
+        </section>
+
+        <section class="research">
+            <div class="section-header">
+                <h2>Research & Datasets</h2>
+                <p>References and datasets listed in the project README.</p>
+            </div>
+            <div class="research-grid">
+                <div class="about-card">
+                    <h3>Key Research Papers</h3>
+                    <ul class="about-list">
+                        <li>MCPT CVPR 2024 AI City Challenge (HOTA 67.21%)</li>
+                        <li>ByteTrack ECCV 2022 (80.3 MOTA)</li>
+                        <li>Video Anomaly Detection (ResNet-50 + SRU)</li>
+                        <li>Crowd Flow Prediction (15–30 min advance)</li>
+                        <li>Hybrid Security Systems (80% response reduction)</li>
+                    </ul>
+                </div>
+                <div class="about-card">
+                    <h3>Datasets</h3>
+                    <ul class="about-list">
+                        <li>CrowdHuman</li>
+                        <li>Market-1501 (Re-ID benchmark)</li>
+                        <li>UCF-Crime</li>
+                        <li>AI City Challenge 2024</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <section class="about-team">
+            <div class="section-header">
+                <h2>Developers & Guides</h2>
+                <p>Team data pulled from the project README.</p>
+            </div>
+
+            <div class="team-grid">
+                <div class="team-card lead">
+                    <h3>Dipanshu Shamkuwar</h3>
+                    <p class="role">Project Lead & AI Engineer</p>
+                </div>
+                <div class="team-card lead">
+                    <h3>Bhavish Domale</h3>
+                    <p class="role">Blockchain Developer</p>
+                </div>
+                <div class="team-card lead">
+                    <h3>Bhumika Chadokar</h3>
+                    <p class="role">Full-Stack Developer</p>
+                </div>
+                <div class="team-card lead">
+                    <h3>Arushi Kamble</h3>
+                    <p class="role">DevOps Engineer</p>
+                </div>
+            </div>
+
+            <div class="guides">
+                <h3>Guides & Mentors</h3>
+                <div class="guide-grid">
+                    <div class="guide-card">
+                        <span class="guide-name">Prof. Kalyani Bawangarh</span>
+                        <span class="guide-role">Project Guide</span>
+                    </div>
+                    <div class="guide-card">
+                        <span class="guide-name">Prof. Purva Wagh</span>
+                        <span class="guide-role">SIH SPOC & Guide</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <footer class="about-footer">
+            <div class="footer-card">
+                <h3>Contact</h3>
+                <p>Email: dipanshushamkuwar@gmail.com</p>
+                <p>Discussion Forum: GitHub Discussions</p>
+            </div>
+            <div class="footer-card">
+                <h3>Repository</h3>
+                <p>GitHub: https://github.com/Dipanshu-S/Decentralized-Blockchain-Driven-Tourist-Safety-and-Forensic-ID</p>
+                <p>Issue Tracker: GitHub Issues</p>
+            </div>
+            <div class="footer-card">
+                <h3>License</h3>
+                <p>MIT License (see LICENSE)</p>
+            </div>
+        </footer>
+    </main>
+</body>
+</html>

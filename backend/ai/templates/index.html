@@ -6,7 +6,7 @@
     <title>Smart Tourist Safety - MCPT System</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
 </head>
-<body>
+<body class="dashboard-page">
     <!-- Navigation Bar -->
     <nav class="navbar">
         <div class="nav-content">
@@ -16,8 +16,14 @@
                 <span class="subtitle">Multi-Camera People Tracking</span>
             </h1>
             <div class="nav-status">
-                <a href="/register" class="btn btn-success" style="margin-right: 1rem; text-decoration: none;">
+                <a href="/blockchain" class="btn btn-primary" style="text-decoration: none;">
+                    🔗 Blockchain
+                </a>
+                <a href="/register" class="btn btn-success" style="text-decoration: none;">
                     ➕ Register Tourist
+                </a>
+                <a href="/about" class="btn btn-primary" style="text-decoration: none;">
+                    ✨ About
                 </a>
                 <span id="statusBadge" class="badge badge-stopped">● STOPPED</span>
             </div>
@@ -26,121 +32,100 @@
 
     <!-- Main Container -->
     <div class="container">
-        <!-- Control Panel -->
-        <div class="control-panel card">
-            <h2 class="card-title">⚙️ Camera Control Panel</h2>
-            
-            <!-- Tab Navigation -->
-            <div class="tab-navigation">
-                <button class="tab-btn active" onclick="switchTab(1)">
-                    📷 Camera 1
-                </button>
-                <button class="tab-btn" onclick="switchTab(2)">
-                    📷 Camera 2
-                </button>
-            </div>
-
-            <!-- Camera 1 Settings -->
-            <div id="cameraSettings1" class="camera-settings active">
-                <div class="settings-header">
-                    <h3>📷 Camera 1 Configuration</h3>
-                    <span id="camera1Badge" class="status-badge inactive">● Inactive</span>
+        <div class="top-grid">
+            <!-- Control Panel -->
+            <div class="control-panel card">
+                <div class="control-header">
+                    <h2 class="card-title">⚙️ Camera Control</h2>
+                    <div class="camera-badges">
+                        <span id="camera1Badge" class="status-badge inactive">● Cam 1</span>
+                        <span id="camera2Badge" class="status-badge inactive">● Cam 2</span>
+                    </div>
                 </div>
 
-                <div class="form-group">
-                    <label for="videoSource1">Video Source</label>
-                    <select id="videoSource1" class="input-select" onchange="handleSourceChange(1)">
-                        <option value="webcam">📷 Webcam</option>
-                        <option value="video" selected>🎬 Video File (MP4)</option>
-                        <option value="esp32cam">📡 ESP32-CAM (URL)</option>
-                    </select>
+                <div class="control-grid">
+                    <div class="form-group">
+                        <label for="activeCameraSelect">Active Camera</label>
+                        <select id="activeCameraSelect" class="input-select">
+                            <option value="1" selected>Camera 1</option>
+                            <option value="2">Camera 2</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="videoSource">Video Source</label>
+                        <select id="videoSource" class="input-select">
+                            <option value="webcam">📷 Webcam</option>
+                            <option value="video" selected>🎬 Video File (MP4)</option>
+                            <option value="esp32cam">📡 ESP32-CAM (URL)</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group" id="videoPathGroup">
+                        <label for="videoPath">Video File Path</label>
+                        <input type="text" id="videoPath" class="input-text"
+                               placeholder="videos/sample.mp4" value="videos/sample.mp4">
+                    </div>
+
+                    <div class="form-group" id="esp32UrlGroup" style="display: none;">
+                        <label for="esp32Url">ESP32-CAM Stream URL</label>
+                        <input type="text" id="esp32Url" class="input-text"
+                               placeholder="http://192.168.1.100:81/stream">
+                    </div>
                 </div>
 
-                <div class="form-group" id="videoPathGroup1">
-                    <label for="videoPath1">Video File Path</label>
-                    <input type="text" id="videoPath1" class="input-text" 
-                           placeholder="videos/sample.mp4" value="videos/sample.mp4">
-                </div>
-
-                <div class="form-group" id="esp32UrlGroup1" style="display: none;">
-                    <label for="esp32Url1">ESP32-CAM Stream URL</label>
-                    <input type="text" id="esp32Url1" class="input-text" 
-                           placeholder="http://192.168.1.100:81/stream">
-                </div>
-
-                <div class="button-group">
-                    <button class="btn btn-primary" onclick="startCamera(1)">
-                        <span class="btn-icon">▶️</span> Start Camera 1
-                    </button>
-                    <button class="btn btn-danger" onclick="stopCamera(1)">
-                        <span class="btn-icon">⏹️</span> Stop Camera 1
-                    </button>
-                </div>
-            </div>
-
-            <!-- Camera 2 Settings -->
-            <div id="cameraSettings2" class="camera-settings">
-                <div class="settings-header">
-                    <h3>📷 Camera 2 Configuration</h3>
-                    <span id="camera2Badge" class="status-badge inactive">● Inactive</span>
-                </div>
-
-                <div class="form-group">
-                    <label for="videoSource2">Video Source</label>
-                    <select id="videoSource2" class="input-select" onchange="handleSourceChange(2)">
-                        <option value="webcam">📷 Webcam</option>
-                        <option value="video" selected>🎬 Video File (MP4)</option>
-                        <option value="esp32cam">📡 ESP32-CAM (URL)</option>
-                    </select>
-                </div>
-
-                <div class="form-group" id="videoPathGroup2">
-                    <label for="videoPath2">Video File Path</label>
-                    <input type="text" id="videoPath2" class="input-text" 
-                           placeholder="videos/sample2.mp4" value="videos/sample.mp4">
-                </div>
-
-                <div class="form-group" id="esp32UrlGroup2" style="display: none;">
-                    <label for="esp32Url2">ESP32-CAM Stream URL</label>
-                    <input type="text" id="esp32Url2" class="input-text" 
-                           placeholder="http://192.168.1.101:81/stream">
-                </div>
-
-                <div class="button-group">
-                    <button class="btn btn-primary" onclick="startCamera(2)">
-                        <span class="btn-icon">▶️</span> Start Camera 2
-                    </button>
-                    <button class="btn btn-danger" onclick="stopCamera(2)">
-                        <span class="btn-icon">⏹️</span> Stop Camera 2
-                    </button>
-                </div>
-            </div>
-            <!-- Add this after the camera tabs section in Control Panel -->
-
-            <!-- Tourist Search Section -->
-            <div style="margin-top: 2rem; padding-top: 2rem; border-top: 2px solid #e5e7eb;">
-                <h3 style="color: #1f2937; margin-bottom: 1rem;">🔍 Search Tourist</h3>
-                
-                <div class="form-group">
-                    <label for="searchDID">Digital Identity (DID)</label>
-                    <div style="display: flex; gap: 0.5rem;">
-                        <input type="text" id="searchDID" class="input-text" 
-                            placeholder="did:tourist:abc123" style="flex: 1;">
-                        <button class="btn btn-primary" onclick="searchTourist()">
-                            🔍 Search
+                <div class="control-actions">
+                    <div class="active-camera-info">
+                        <span class="active-label">Controlling:</span>
+                        <span id="activeCameraLabel" class="active-value">Camera 1</span>
+                    </div>
+                    <div class="button-group">
+                        <button class="btn btn-primary" onclick="startActiveCamera()">
+                            <span class="btn-icon">▶️</span> Start Selected
+                        </button>
+                        <button class="btn btn-danger" onclick="stopActiveCamera()">
+                            <span class="btn-icon">⏹️</span> Stop Selected
                         </button>
                     </div>
                 </div>
-                
-                <div id="searchResult" style="margin-top: 1rem; display: none;">
-                    <div style="background: #f9fafb; padding: 1rem; border-radius: 8px;">
-                        <h4 style="color: #10b981; margin-bottom: 0.5rem;">Tourist Found ✅</h4>
-                        <div id="touristInfo" style="font-size: 0.9rem; color: #6b7280;">
-                            <!-- Tourist info will be displayed here -->
+
+                <!-- Tourist Search Section -->
+                <div class="search-panel">
+                    <h3 class="section-title">🔍 Search Tourist</h3>
+
+                    <div class="form-group">
+                        <label for="searchDID">Digital Identity (DID)</label>
+                        <div class="search-input-row">
+                            <input type="text" id="searchDID" class="input-text"
+                                placeholder="did:tourist:abc123">
+                            <button class="btn btn-primary" onclick="searchTourist()">
+                                🔍 Search
+                            </button>
                         </div>
-                        <button class="btn btn-primary" onclick="viewTrajectory()" style="margin-top: 1rem;">
-                            📍 View Trajectory
-                        </button>
+                    </div>
+
+                    <div id="searchResult" class="search-result">
+                        <div class="search-result-card">
+                            <h4 class="search-success">Tourist Found ✅</h4>
+                            <div id="touristInfo" class="search-result-info">
+                                <!-- Tourist info will be displayed here -->
+                            </div>
+                            <button class="btn btn-primary" onclick="viewTrajectory()">
+                                📍 View Trajectory
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Detection List -->
+            <div class="card detections-card">
+                <h2 class="card-title">🎯 Active Detections <span class="muted">(updates every 5s)</span></h2>
+                <div id="detectionsList" class="detections-list">
+                    <div class="empty-state">
+                        <span class="empty-icon">📭</span>
+                        <p>No detections yet</p>
+                        <p class="empty-hint">Start cameras to see results</p>
                     </div>
                 </div>
             </div>
@@ -204,7 +189,7 @@
                 </div>
             </div>
 
-            <!-- Stats & Detections -->
+            <!-- Stats -->
             <div class="sidebar">
                 <!-- Real-time Stats -->
                 <div class="card">
@@ -238,18 +223,6 @@
                         <div class="info-item">
                             <span class="info-label">Status:</span>
                             <span id="systemStatus" class="info-value">Ready</span>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Detection List -->
-                <div class="card detections-card">
-                    <h2 class="card-title">🎯 Active Detections (Updates every 5s)</h2>
-                    <div id="detectionsList" class="detections-list">
-                        <div class="empty-state">
-                            <span class="empty-icon">📭</span>
-                            <p>No detections yet</p>
-                            <p class="empty-hint">Start cameras to see results</p>
                         </div>
                     </div>
                 </div>

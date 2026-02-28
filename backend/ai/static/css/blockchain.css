@@ -1,0 +1,377 @@
+:root {
+    --bg: #05070f;
+    --panel: rgba(9, 15, 30, 0.4);
+    --panel-bright: rgba(14, 22, 40, 0.4);
+    --cyan: #32f6ff;
+    --magenta: #ff2cf7;
+    --lime: #7bff8a;
+    --text: #e6f4ff;
+    --muted: #9fb3c8;
+    --border: rgba(50, 246, 255, 0.2);
+    --shadow: 0 12px 40px rgba(6, 10, 24, 0.6);
+}
+
+* {
+    box-sizing: border-box;
+}
+
+body.blockchain-page {
+    margin: 0;
+    font-family: "Space Grotesk", sans-serif;
+    color: var(--text);
+    min-height: 100vh;
+    background: var(--bg);
+    position: relative;
+    overflow-x: hidden;
+}
+
+.blockchain-bg {
+    position: fixed;
+    inset: 0;
+    background: url("../media/blockchain-bg.gif") center/cover no-repeat fixed;
+    filter: brightness(0.75) saturate(1.35);
+    z-index: 0;
+}
+
+.blockchain-overlay {
+    position: fixed;
+    inset: 0;
+    background: radial-gradient(circle at top left, rgba(50, 246, 255, 0.2), transparent 55%),
+                radial-gradient(circle at 15% 70%, rgba(255, 44, 247, 0.18), transparent 55%),
+                linear-gradient(120deg, rgba(5, 7, 15, 0.45), rgba(7, 12, 25, 0.55));
+    z-index: 1;
+}
+
+.bc-nav {
+    position: sticky;
+    top: 0;
+    z-index: 5;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1.5rem 3rem;
+    background: rgba(4, 8, 20, 0.92);
+    border-bottom: 1px solid var(--border);
+    backdrop-filter: blur(14px);
+}
+
+.bc-brand {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.bc-logo {
+    width: 52px;
+    height: 52px;
+    border-radius: 16px;
+    display: grid;
+    place-items: center;
+    font-size: 1.6rem;
+    background: rgba(50, 246, 255, 0.12);
+    border: 1px solid rgba(50, 246, 255, 0.4);
+    box-shadow: 0 0 24px rgba(50, 246, 255, 0.35);
+}
+
+.bc-title {
+    font-family: "Orbitron", sans-serif;
+    font-size: 1.25rem;
+    letter-spacing: 0.04em;
+}
+
+.bc-subtitle {
+    color: var(--muted);
+    font-size: 0.9rem;
+}
+
+.bc-actions {
+    display: flex;
+    gap: 0.75rem;
+}
+
+.bc-btn {
+    padding: 0.7rem 1.2rem;
+    border-radius: 999px;
+    border: 1px solid transparent;
+    font-size: 0.9rem;
+    text-decoration: none;
+    color: var(--text);
+    transition: all 0.2s ease;
+    background: rgba(255, 255, 255, 0.08);
+    cursor: pointer;
+}
+
+.bc-btn.neon {
+    background: linear-gradient(135deg, rgba(50, 246, 255, 0.25), rgba(255, 44, 247, 0.2));
+    border: 1px solid rgba(50, 246, 255, 0.6);
+    box-shadow: 0 0 24px rgba(50, 246, 255, 0.45);
+}
+
+.bc-btn.ghost {
+    border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.bc-btn:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 8px 20px rgba(8, 15, 30, 0.5);
+}
+
+.bc-shell {
+    position: relative;
+    z-index: 2;
+    padding: 2rem 3rem 4rem;
+    max-width: 1300px;
+    margin: 0 auto;
+}
+
+.bc-hero {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    margin-bottom: 2rem;
+}
+
+.hero-card {
+    padding: 2.5rem;
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: 28px;
+    box-shadow: var(--shadow);
+}
+
+.hero-kicker {
+    text-transform: uppercase;
+    letter-spacing: 0.3em;
+    font-size: 0.7rem;
+    color: var(--cyan);
+}
+
+.hero-card h1 {
+    font-family: "Orbitron", sans-serif;
+    font-size: 2.2rem;
+    margin: 0.6rem 0 1rem;
+}
+
+.hero-text {
+    color: var(--muted);
+    line-height: 1.7;
+    margin-bottom: 1.5rem;
+}
+
+.hero-metrics {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+    gap: 1rem;
+}
+
+.metric {
+    background: var(--panel-bright);
+    border-radius: 16px;
+    padding: 1rem 1.2rem;
+    border: 1px solid rgba(123, 255, 138, 0.25);
+}
+
+.metric-label {
+    font-size: 0.75rem;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 0.2em;
+}
+
+.metric-value {
+    font-size: 1rem;
+    margin-top: 0.3rem;
+    color: var(--lime);
+}
+
+.bc-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 1.5rem;
+    margin-bottom: 2rem;
+}
+
+.bc-card {
+    background: var(--panel);
+    border: 1px solid rgba(255, 44, 247, 0.15);
+    border-radius: 24px;
+    padding: 1.6rem;
+    box-shadow: var(--shadow);
+}
+
+.bc-card.glow {
+    border-color: rgba(50, 246, 255, 0.4);
+    box-shadow: 0 0 30px rgba(50, 246, 255, 0.2);
+}
+
+.bc-card h2 {
+    font-family: "Orbitron", sans-serif;
+    margin-top: 0;
+    margin-bottom: 1rem;
+    font-size: 1.1rem;
+}
+
+.bc-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: grid;
+    gap: 0.7rem;
+    color: var(--muted);
+    font-size: 0.95rem;
+}
+
+.pill {
+    display: inline-flex;
+    padding: 0.15rem 0.6rem;
+    border-radius: 999px;
+    border: 1px solid rgba(50, 246, 255, 0.4);
+    color: var(--cyan);
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    margin-right: 0.5rem;
+}
+
+.bc-ledger {
+    background: var(--panel);
+    border-radius: 28px;
+    border: 1px solid var(--border);
+    padding: 1.5rem;
+    box-shadow: var(--shadow);
+}
+
+.ledger-header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 1rem;
+}
+
+.ledger-header h2 {
+    margin: 0 0 0.4rem 0;
+    font-family: "Orbitron", sans-serif;
+}
+
+.ledger-sub {
+    margin: 0;
+    color: var(--muted);
+    font-size: 0.9rem;
+}
+
+.ledger-actions {
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+}
+
+.status-badge {
+    padding: 0.4rem 0.8rem;
+    border-radius: 999px;
+    border: 1px solid rgba(50, 246, 255, 0.4);
+    font-size: 0.75rem;
+    color: var(--cyan);
+    background: rgba(50, 246, 255, 0.1);
+}
+
+.ledger-table-wrap {
+    margin-top: 1.5rem;
+    max-height: 420px;
+    overflow: auto;
+    border-radius: 18px;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.ledger-table {
+    width: 100%;
+    border-collapse: collapse;
+    min-width: 900px;
+}
+
+.ledger-table thead th {
+    position: sticky;
+    top: 0;
+    background: rgba(8, 14, 28, 0.95);
+    text-align: left;
+    padding: 0.8rem 1rem;
+    font-size: 0.75rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--muted);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.ledger-table tbody td {
+    padding: 0.9rem 1rem;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    font-size: 0.9rem;
+    color: var(--text);
+}
+
+.ledger-table tbody tr:hover {
+    background: rgba(50, 246, 255, 0.05);
+}
+
+.ledger-empty {
+    text-align: center;
+    color: var(--muted);
+    padding: 2rem 1rem;
+}
+
+.tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    padding: 0.2rem 0.6rem;
+    border-radius: 999px;
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.tag.did {
+    color: var(--cyan);
+    border-color: rgba(50, 246, 255, 0.4);
+}
+
+.tag.link {
+    color: var(--magenta);
+    border-color: rgba(255, 44, 247, 0.4);
+}
+
+.tag.incident {
+    color: var(--lime);
+    border-color: rgba(123, 255, 138, 0.4);
+}
+
+.mono {
+    font-family: "Courier New", monospace;
+    font-size: 0.82rem;
+    color: var(--muted);
+    word-break: break-all;
+}
+
+@media (max-width: 960px) {
+    .bc-nav {
+        flex-direction: column;
+        gap: 1rem;
+        align-items: flex-start;
+    }
+    .bc-shell {
+        padding: 1.5rem;
+    }
+}
+
+@media (max-width: 600px) {
+    .bc-actions {
+        flex-direction: column;
+        width: 100%;
+    }
+    .bc-btn {
+        width: 100%;
+        text-align: center;
+    }
+    .hero-card h1 {
+        font-size: 1.6rem;
+    }
+}

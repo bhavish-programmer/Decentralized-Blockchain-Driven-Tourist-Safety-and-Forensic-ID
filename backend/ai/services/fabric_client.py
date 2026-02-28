@@ -67,6 +67,23 @@ def _post_json(path: str, payload: dict) -> dict:
         raise RuntimeError(f"Fabric gateway unreachable: {getattr(err, 'reason', err)}")
 
 
+def _get_json(path: str) -> dict:
+    url = f"{_gateway_url()}{path}"
+    req = urllib.request.Request(url, method="GET")
+    try:
+        with urllib.request.urlopen(req, timeout=_timeout()) as resp:
+            raw = resp.read().decode("utf-8")
+            return json.loads(raw) if raw else {}
+    except urllib.error.HTTPError as err:
+        try:
+            detail = err.read().decode("utf-8")
+        except Exception:
+            detail = ""
+        raise RuntimeError(f"Fabric gateway HTTP {err.code}: {detail or err.reason}")
+    except urllib.error.URLError as err:
+        raise RuntimeError(f"Fabric gateway unreachable: {getattr(err, 'reason', err)}")
+
+
 def _call(path: str, payload: dict) -> dict | None:
     if not fabric_enabled():
         return None
@@ -117,3 +134,46 @@ def link_tracking_session_async(
         args=(session_id, did, confidence, timestamp),
         daemon=True,
     ).start()
+
+
+def gateway_health(force: bool = False) -> dict | None:
+    if not fabric_enabled() and not force:
+        return None
+    try:
+        return _get_json("/health")
+    except Exception as exc:
+        msg = str(exc)
+        if _require_success() and not force:
+            raise
+        logger.warning("Fabric health check failed: {}", msg)
+        return None
+
+
+def query_did(did: str) -> dict | None:
+    if not did:
+        return None
+    if not fabric_enabled():
+        return None
+    try:
+        return _get_json(f"/fabric/did/{did}")
+    except Exception as exc:
+        msg = str(exc)
+        if _require_success():
+            raise
+        logger.warning("Fabric DID query failed: {}", msg)
+        return None
+
+
+def query_link(session_id: str) -> dict | None:
+    if not session_id:
+        return None
+    if not fabric_enabled():
+        return None
+    try:
+        return _get_json(f"/fabric/link/{session_id}")
+    except Exception as exc:
+        msg = str(exc)
+        if _require_success():
+            raise
+        logger.warning("Fabric link query failed: {}", msg)
+        return None

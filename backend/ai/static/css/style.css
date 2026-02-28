@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=Oxanium:wght@400;600;700&family=Rajdhani:wght@400;600&display=swap');
+
 /* Modern Dashboard Styles */
 :root {
     --primary: #667eea;
@@ -607,16 +609,23 @@ body {
 .nav-status {
     display: flex;
     align-items: center;
+    gap: 0.75rem;
 }
 
 .nav-status .btn {
-    padding: 0.5rem 1rem;
+    padding: 0 1rem;
+    height: 40px;
+    min-width: 150px;
     font-size: 0.9rem;
     border-radius: 8px;
     border: none;
     cursor: pointer;
     transition: all 0.3s;
     font-weight: 600;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex: 0 0 auto;
 }
 
 .btn-success {
@@ -643,4 +652,345 @@ body {
 
 #touristInfo p:last-child {
     border-bottom: none;
+}
+
+/* ================== CYBERPUNK DASHBOARD OVERRIDES ================== */
+body.dashboard-page {
+    font-family: 'Rajdhani', 'Oxanium', sans-serif;
+    background: #05060b;
+    color: #e6e7ff;
+    min-height: 100vh;
+    position: relative;
+}
+
+body.dashboard-page::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    background: url("/static/dashboard_bg.gif") center/cover no-repeat;
+    opacity: 0.55;
+    z-index: -2;
+}
+
+body.dashboard-page::after {
+    content: "";
+    position: fixed;
+    inset: 0;
+    background: radial-gradient(circle at top left, rgba(0, 245, 255, 0.18), transparent 45%),
+                linear-gradient(135deg, rgba(8, 12, 26, 0.7), rgba(5, 7, 14, 0.8));
+    z-index: -1;
+}
+
+body.dashboard-page {
+    --primary: #00f5ff;
+    --primary-dark: #00c7d9;
+    --success: #00ff9c;
+    --danger: #ff4d6d;
+    --warning: #ffb703;
+    --dark: #0a0f1f;
+    --light: rgba(12, 16, 30, 0.65);
+    --border: rgba(0, 245, 255, 0.2);
+    --shadow: rgba(0, 0, 0, 0.35);
+    padding-bottom: 40px;
+}
+
+body.dashboard-page .navbar {
+    background: rgba(7, 10, 18, 0.75);
+    border-bottom: 1px solid rgba(0, 245, 255, 0.2);
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.35);
+}
+
+body.dashboard-page .nav-content {
+    max-width: 1920px;
+    padding: 0.75rem 2rem;
+}
+
+body.dashboard-page .nav-title {
+    color: #6df6ff;
+    text-shadow: 0 0 12px rgba(0, 245, 255, 0.45);
+    font-family: 'Oxanium', sans-serif;
+}
+
+body.dashboard-page .subtitle {
+    color: rgba(230, 231, 255, 0.7);
+}
+
+body.dashboard-page .container {
+    max-width: 1920px;
+    padding: 1.25rem 2rem 3rem;
+}
+
+body.dashboard-page .card {
+    background: rgba(12, 16, 30, 0.5);
+    border-radius: 18px;
+    border: 1px solid rgba(0, 245, 255, 0.2);
+    box-shadow: 0 18px 40px rgba(0, 0, 0, 0.35);
+    padding: 1.25rem;
+    backdrop-filter: blur(6px) saturate(120%);
+}
+
+body.dashboard-page .card * {
+    text-shadow: 0 1px 5px rgba(0, 0, 0, 0.65);
+}
+
+body.dashboard-page .card-title {
+    color: #8cf8ff;
+    border-bottom: 1px solid rgba(0, 245, 255, 0.35);
+    letter-spacing: 0.04em;
+    font-family: 'Oxanium', sans-serif;
+}
+
+body.dashboard-page .form-group label {
+    color: rgba(230, 231, 255, 0.8);
+}
+
+body.dashboard-page .input-select,
+body.dashboard-page .input-text {
+    background: rgba(7, 12, 22, 0.85);
+    border-color: rgba(0, 245, 255, 0.3);
+    color: #e6f7ff;
+}
+
+body.dashboard-page .input-text::placeholder {
+    color: rgba(230, 231, 255, 0.5);
+}
+
+body.dashboard-page .nav-status .btn {
+    background: rgba(0, 245, 255, 0.12);
+    color: #e6f7ff;
+    border: 1px solid rgba(0, 245, 255, 0.35);
+}
+
+body.dashboard-page .nav-status .btn:hover {
+    background: rgba(0, 245, 255, 0.2);
+    box-shadow: 0 0 18px rgba(0, 245, 255, 0.35);
+}
+
+body.dashboard-page .btn-primary {
+    background: rgba(0, 245, 255, 0.18);
+    color: #e6f7ff;
+    border: 1px solid rgba(0, 245, 255, 0.4);
+}
+
+body.dashboard-page .btn-primary:hover {
+    background: rgba(0, 245, 255, 0.3);
+    box-shadow: 0 0 16px rgba(0, 245, 255, 0.35);
+    transform: translateY(-2px);
+}
+
+body.dashboard-page .btn-danger {
+    background: rgba(255, 77, 109, 0.2);
+    color: #ffd1db;
+    border: 1px solid rgba(255, 77, 109, 0.45);
+}
+
+body.dashboard-page .btn-danger:hover {
+    background: rgba(255, 77, 109, 0.32);
+    box-shadow: 0 0 16px rgba(255, 77, 109, 0.35);
+    transform: translateY(-2px);
+}
+
+body.dashboard-page .badge-stopped {
+    background: rgba(255, 77, 109, 0.2);
+    color: #ff8fa4;
+}
+
+body.dashboard-page .badge-active {
+    background: rgba(0, 255, 156, 0.2);
+    color: #7dffca;
+}
+
+body.dashboard-page .top-grid {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: 1.5rem;
+    margin-bottom: 1.5rem;
+}
+
+body.dashboard-page .control-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+}
+
+body.dashboard-page .camera-badges {
+    display: flex;
+    gap: 0.5rem;
+}
+
+body.dashboard-page .control-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 1rem;
+    margin-top: 1rem;
+}
+
+body.dashboard-page .control-actions {
+    margin-top: 1rem;
+}
+
+body.dashboard-page .active-camera-info {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-bottom: 0.75rem;
+    color: rgba(230, 231, 255, 0.8);
+}
+
+body.dashboard-page .active-value {
+    color: #7df9ff;
+    font-weight: 600;
+}
+
+body.dashboard-page .search-panel {
+    margin-top: 1.5rem;
+    padding-top: 1.25rem;
+    border-top: 1px solid rgba(0, 245, 255, 0.2);
+}
+
+body.dashboard-page .section-title {
+    color: #7df9ff;
+    margin-bottom: 0.75rem;
+    font-family: 'Oxanium', sans-serif;
+}
+
+body.dashboard-page .search-input-row {
+    display: flex;
+    gap: 0.75rem;
+}
+
+body.dashboard-page .search-input-row .btn {
+    flex: 0 0 auto;
+    min-width: 140px;
+}
+
+body.dashboard-page .search-result {
+    margin-top: 1rem;
+    display: none;
+}
+
+body.dashboard-page #searchResult {
+    display: none;
+}
+
+body.dashboard-page .search-result-card {
+    background: rgba(7, 12, 22, 0.7);
+    border-radius: 12px;
+    padding: 1rem;
+    border: 1px solid rgba(0, 245, 255, 0.18);
+}
+
+body.dashboard-page .search-success {
+    color: #7dffca;
+    margin-bottom: 0.5rem;
+}
+
+body.dashboard-page .search-result-info {
+    color: rgba(230, 231, 255, 0.75);
+    font-size: 0.95rem;
+}
+
+body.dashboard-page .muted {
+    color: rgba(230, 231, 255, 0.55);
+    font-size: 0.85rem;
+    margin-left: 0.5rem;
+}
+
+body.dashboard-page .main-grid {
+    grid-template-columns: 3fr 1.2fr;
+    gap: 1.5rem;
+}
+
+body.dashboard-page .video-container {
+    background: rgba(4, 8, 18, 0.9);
+    border: 1px solid rgba(0, 245, 255, 0.2);
+    min-height: 360px;
+}
+
+body.dashboard-page .camera-container {
+    background: rgba(10, 14, 26, 0.75);
+    border: 1px solid rgba(0, 245, 255, 0.12);
+}
+
+body.dashboard-page .camera-status {
+    background: rgba(255, 77, 109, 0.2);
+    color: #ff9ab2;
+}
+
+body.dashboard-page .camera-status.active {
+    background: rgba(0, 255, 156, 0.2);
+    color: #7dffca;
+}
+
+body.dashboard-page .stat-box {
+    background: linear-gradient(135deg, rgba(0, 245, 255, 0.25), rgba(0, 115, 255, 0.25));
+}
+
+body.dashboard-page .stat-success {
+    background: linear-gradient(135deg, rgba(0, 255, 156, 0.28), rgba(0, 172, 121, 0.28));
+}
+
+body.dashboard-page .info-section {
+    border-top: 1px solid rgba(0, 245, 255, 0.2);
+}
+
+body.dashboard-page .info-item {
+    border-bottom: 1px solid rgba(0, 245, 255, 0.1);
+}
+
+body.dashboard-page .info-label {
+    color: rgba(230, 231, 255, 0.7);
+}
+
+body.dashboard-page .info-value {
+    color: #e6f7ff;
+}
+
+body.dashboard-page .detections-card {
+    max-height: 520px;
+}
+
+body.dashboard-page .detections-list {
+    max-height: 420px;
+}
+
+body.dashboard-page .detection-item {
+    background: rgba(9, 14, 26, 0.8);
+    border-left: 3px solid rgba(0, 245, 255, 0.6);
+    color: rgba(230, 231, 255, 0.8);
+}
+
+body.dashboard-page .detection-item strong {
+    color: #7df9ff;
+}
+
+body.dashboard-page .detections-list::-webkit-scrollbar-thumb {
+    background: rgba(0, 245, 255, 0.6);
+}
+
+body.dashboard-page .footer {
+    background: rgba(7, 10, 18, 0.75);
+    border-top: 1px solid rgba(0, 245, 255, 0.2);
+    color: rgba(230, 231, 255, 0.7);
+}
+
+@media (max-width: 1200px) {
+    body.dashboard-page .top-grid {
+        grid-template-columns: 1fr;
+    }
+
+    body.dashboard-page .control-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+}
+
+@media (max-width: 768px) {
+    body.dashboard-page .control-grid {
+        grid-template-columns: 1fr;
+    }
+
+    body.dashboard-page .search-input-row {
+        flex-direction: column;
+    }
 }
